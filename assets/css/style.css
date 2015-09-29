@@ -1,0 +1,581 @@
+html
+{
+    height:100%;
+}
+
+body
+{
+    font-family:"Libre Baskerville", serif;
+    display:flex;
+    margin:0;
+    min-height:100%;
+    color:#111;
+}
+
+a, a:visited
+{
+    text-decoration:none;
+    color:#5365BE;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+    margin:0 0 0.25em 0;
+    font-family: "Patua One";
+}
+
+@font-face 
+{
+	font-family: 'arcena';
+	src: url('/assets/fonts/ARCENA.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.col
+{
+    display:inline-block;
+    vertical-align:top;
+}
+
+.jsLink:hover
+{
+    cursor:pointer;
+}
+
+.grayscale
+{
+    filter: grayscale(100%);
+}
+
+.darkened
+{
+    filter: brightness(20%);
+}
+
+/* Horiz Alignment */
+.c
+{
+    text-align:center;
+}
+
+.r
+{
+    text-align:right;
+}
+
+.l
+{
+    text-align:left;
+}
+/* End Alignment */
+
+/* Vert Alignment */
+.top
+{
+    vertical-align:top;
+}
+.mid
+{
+    vertical-align:middle;
+}
+.bottom
+{
+    vertical-align:bottom;
+}
+/* End Vert Alignment */
+
+/* Float */
+.fl
+{
+    float:left;
+}
+.fr
+{
+    float:right;
+}
+/* End Float */
+
+/* Font Sizes */
+.small
+{
+    font-size:10pt;
+}
+
+.medium
+{
+    font-size:14pt;
+}
+
+.big
+{
+    font-size:18pt;
+}
+
+.very-big
+{
+    font-size:24pt;
+}
+
+.huge
+{
+    font-size:36pt;
+}
+/* End Font Sizes */
+
+/* Font Families */
+.sf
+{
+    font-family:"Libre Baskerville", serif;
+}
+
+.ss
+{
+    font-family:sans-serif;
+}
+
+.mono
+{
+    font-family:monospace;
+}
+/* End Font Families */
+
+/* Internet Explorer */
+img
+{
+    border:0;
+}
+/* End Internet Explorer */
+
+.page-left
+{
+    width:20%;
+    background: linear-gradient(90deg, #D4CDAC 95%, #BAA687);
+    overflow-y:auto;
+}
+
+.page-right
+{
+    width:80%;
+    background: linear-gradient(-90deg, #D4CDAC 97%, #BAA687);
+}
+
+#left > *
+{
+    margin:1em;
+}
+
+#right > *
+{
+    margin:1em 1em 1em 5em;
+    
+}
+
+#logo
+{
+    text-align:center;
+    width:80%;
+}
+
+nav
+{
+    width:80%;
+}
+
+nav a
+{
+    outline: 0;
+}
+
+nav a > div
+{
+    padding:2px;
+    border-bottom:2px solid #BAA687;
+}
+
+nav .text
+{
+    height:50px;
+    line-height:50px;
+    margin-left:1em;
+}
+
+.spacer
+{
+    height:2px;
+    border-bottom:2px solid #BAA687;
+    margin-bottom:2px;
+}
+
+.flex-break, .filters > .flex-break, #team-flex > .flex-break
+{
+    width:100%;
+    border:0;
+    margin:0;
+    padding:0;
+}
+
+@media (max-width: 1600px)
+{
+    .medium
+    {
+        font-size:12pt;
+    }
+    
+    nav img
+    {
+        max-width:32px;
+        max-height:32px;
+    }
+    
+    nav .text
+    {
+        line-height:32px;
+    }
+}
+
+@media (max-width: 1024px)
+{
+    nav img
+    {
+        display:none;
+    }
+}
+
+@media (max-width: 800px)
+{
+    body
+    {
+        display:block;
+        background: linear-gradient(180deg, #D4CDAC 75%, #BAA687);
+    }
+    
+    .page-left
+    {
+        width:100%;
+        height:auto;
+        background: linear-gradient(0deg, #D4CDAC 75%, #BAA687);
+    }
+    
+    .page-right
+    {
+        width:100%;
+        background: #D4CDAC;
+    }
+    
+    #left > *
+    {
+        margin:0;
+        padding:1em;
+    }
+
+    #right > *
+    {
+        margin:0;
+        padding:1em;
+    }
+}
+
+/* Team related */
+
+.team-overview
+{
+    width:100%;
+    background:#BAA687;
+    border-radius:0.5em;
+    display:flex;
+    min-height:60px;
+}
+
+.team-overview + .team-overview
+{
+    margin-top:0.5em;
+}
+
+.pokemon-bubble
+{
+    width:50px;
+    height:50px;
+    border-radius:20px;
+    border:1px solid #BAA687;
+    background:#D4CDAC;
+    display:inline-block;
+    vertical-align:top;
+    margin:0.25em;
+}
+
+.pokemon-bubble img
+{
+    margin-left:5px;
+    margin-top:9px;
+}
+
+.shiny
+{
+    background:url("/assets/images/shiny.png"), #D4CDAC;
+    background-repeat:no-repeat;
+    background-position:5px 2px;
+}
+
+.team-overview .teammates
+{
+    min-width:255px;
+    align-self:center;
+}
+
+.team-overview .team-name
+{
+    align-self:center;
+    flex:2;
+    text-align:center;
+}
+
+.team-overview .team-meta
+{
+    align-self:center;
+    flex:1;
+    text-align:right;
+    margin-top:5px;
+    margin-right:4px;
+    margin-left:4px;
+}
+
+.team-meta .team-type
+{
+    float:left;
+}
+
+.item, .logbook
+{
+    height: 65px;
+    line-height:65px;
+    background: #BAA687;
+    padding:0.25em;
+}
+
+.item + .item, .logbook + .logbook, .spaced + .spaced
+{
+    margin-top:0.25em;
+}
+
+.list a
+{
+    display:block;
+    /*color:#000;*/
+    outline: 0;
+}
+
+.list a:hover
+{
+    color:#5365BE;
+}
+
+.list a + a
+{
+    margin-top:0.25em;
+}
+
+.item img, .logbook img
+{
+    width:65px;
+    height:65px;
+    line-height:65px;
+    margin-left:0.25em;
+    margin-right:2.0em;
+}
+
+.gear
+{
+    width:40px;
+    height:32px;
+    position:absolute;
+    width:100%;
+    text-align:right;
+}
+
+.settings-button:hover
+{
+    cursor:pointer;
+}
+
+#right .outline-block
+{
+    min-width:500px;
+    width:50%;
+    margin:1em auto auto auto;
+    background: #D4CDAC;
+    border:2px solid #BAA687;
+    border-radius:0.5em;
+    padding:0.5em;
+}
+
+input, input[type=text], input[type=button], select
+{
+    width:12em;
+    border:1px solid #000;
+    padding:1px;
+    background:#BAA687;
+    margin-bottom:0.25em;
+}
+
+input[type=button]
+{
+    font-family:"Patua One", sans-serif;
+}
+
+.chapter-block
+{
+    border-radius:0.5em;
+    background:#BAA687;
+    margin:1.0em;
+    padding:1em;
+    text-align:center;
+    width:210px;
+}
+
+.chapter-block .text
+{
+    height:3em;
+    text-align:center;
+}
+
+.icons-div
+{
+    background:#BAA687;
+    width:12em;
+    margin:auto;
+    border:1px solid #000;
+}
+
+.type-button:hover
+{
+    cursor:pointer;
+}
+
+.author-block
+{
+    width:12em;
+    margin:auto;
+    margin-bottom:0.1em;
+    text-align:center;
+    line-height:50px;
+    min-height:50px;
+    background:#BAA687;
+    border:1px solid #000;
+}
+
+.author-block img
+{
+    float:left;
+}
+
+.filters
+{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    
+    margin-bottom:0.5em;
+    width:100%;
+    background:#BAA687;
+    border-radius:0.5em;
+    text-align:center;
+    font-size:14pt;
+    
+}
+
+.filters > div
+{
+    background:#D4CDAC;
+    border:1px solid #000;
+    min-width:20%;
+    margin:0.25em;
+    padding:0.25em;
+}
+
+.button-link
+{
+    width:12em;
+    border:1px solid #000;
+    padding:1px;
+    background:#BAA687;
+    margin-bottom:0.25em;   
+    font-size:18pt;
+    font-family: "Patua One";
+}
+
+.pages
+{
+    width:100%;
+    text-align:center;
+}
+
+img[name=user-icon]
+{
+    width:50px;
+    height:50px;
+}
+
+.data-table
+{
+    border-collapse:collapse;
+    width:100%;
+}
+
+.data-table tr
+{
+    border:2px solid #BAA687;
+}
+
+.data-table tr:hover
+{
+    background:#BAA687;
+}
+
+.data-table td
+{
+    padding:0.25em;
+}
+
+input[type=radio]
+{
+    width:auto;
+}
+
+.feed-post
+{
+    min-height:50px;
+    padding:0.25em;
+}
+
+/*
+.feed-post.team         { background:#CFC;}
+.feed-post.pokemon      { background:#CFC;}
+.feed-post.reputation   { background:#CFF;}
+.feed-post.favor        { background:#FCC;}
+.feed-post.inventory    { background:#FCF;}
+.feed-post.chapters     { background:#FFC;}
+.feed-post.meta         { background:#CCC;}
+*/
+.feed-post.team         { background:#BAA687;}
+.feed-post.pokemon      { background:#BAA687;}
+.feed-post.reputation   { background:#BAA687;}
+.feed-post.favor        { background:#BAA687;}
+.feed-post.inventory    { background:#BAA687;}
+.feed-post.chapters     { background:#BAA687;}
+.feed-post.meta         { background:#BAA687;}
+
+.feed-post + .feed-post
+{
+    margin-top:0.25em;
+}
+
+.feed-post .timestamp
+{
+    font-size:8pt;
+}
+
+.feed-post .status
+{
+    width:90%;
+}

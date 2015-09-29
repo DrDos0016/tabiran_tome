@@ -1,0 +1,144 @@
+{% extends "main.html" %}
+{% load guild_ranks %}
+
+{% block css %}
+{% if not yours and not session.admin %}
+<style>
+.gear
+{
+    display:none;
+}
+</style>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="content" id="team-flex">
+    <div id="header">
+        <div class="gear"><a href="/team/edit/{{team.id}}/{{team.name|lower|slugify}}/team"><img class="settings-button" src="/assets/images/sprites/icons/600.png" title="Edit"></a></div>
+        <h1 class="col">{% if app %}<a href="{{app.deviation.url}}" target="_blank">{% endif %}{{team.name}}{% if app %}</a>{% endif %}</h1><br>
+        <div class="small" style="text-align:center;margin-top:1em;">Joined: {{team.joined}}</div>
+        {% if not team.verified %}<div class="big c">{% if session.admin %}<a href="/admin/verify-teams?team={{team.id}}">{% endif %}NOT YET VERIFIED BY STAFF{% if session.admin %}</a>{% endif %}</div>{% endif %}
+    </div>
+
+    <div id="teammates" class="col">
+        <div class="gear"><a href="/team/edit/{{team.id}}/{{team.name|lower|slugify}}/teammates"><img class="settings-button" src="/assets/images/sprites/icons/600.png" title="Edit"></a></div>
+        <h2>Team Members</h2><br>
+        <div class="list">
+        {% for poke in pokemon %}
+        <div class="teammate{% if poke.status|lower != 'active' %} grayscale{% endif %}">
+            {{poke.bubble|safe}}
+            <div class="col">{{poke.name}}<br>{{poke.species_name}}</div>
+            <div class="col" style="float:right;text-align:right;margin-right:0.5em;">{{poke.gender}}<br>{{poke.status}}</div>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+
+    <div id="rep" class="col">
+        <div class="gear"><a href="/team/edit/{{team.id}}/{{team.name|lower|slugify}}/reputation"><img class="settings-button" src="/assets/images/sprites/icons/600.png" title="Edit"></a></div>
+        <h2>Reputation &amp; Badges</h2><br> 
+        <div class="col name">Keepers</div>
+        <div class="col rep">{{team.rep_keepers}}</div>
+        <div class="col ranks">{% rank_images "Keepers" team.rep_keepers %}</div>
+        <div class="col title">{% rank "Keepers" team.rep_keepers %}</div>
+        <br>
+        <div class="col name">Trackers</div>
+        <div class="col rep">{{team.rep_trackers}}</div>
+        <div class="col ranks">{% rank_images "Trackers" team.rep_trackers %}</div>
+        <div class="col title">{% rank "Trackers" team.rep_trackers %}</div>
+        <br>
+        <div class="col name">Scholars</div>
+        <div class="col rep">{{team.rep_scholars}}</div>
+        <div class="col ranks">{% rank_images "Scholars" team.rep_scholars %}</div>
+        <div class="col title">{% rank "Scholars" team.rep_scholars %}</div>
+        <br>
+        <div class="col name">Artisans</div>
+        <div class="col rep">{{team.rep_artisans}}</div>
+        <div class="col ranks">{% rank_images "Artisans" team.rep_artisans %}</div>
+        <div class="col title">{% rank "Artisans" team.rep_artisans %}</div>
+    </div>
+
+    <div id="favor" class="col">
+        <div class="gear"><a href="/team/edit/{{team.id}}/{{team.name|lower|slugify}}/favor"><img class="settings-button" src="/assets/images/sprites/icons/600.png" title="Edit"></a></div>
+        <h2>Favor</h2><br>
+        <div class="col label">Earned</div> <div class="col value">{{team.favor_earned}}</div>
+        <br>
+        <div class="col label">Spent</div> <div class="col value">{{team.favor_spent}}</div>
+        <br>
+        <div class="col label">Remaining</div> <div class="col value">{{team.favor}}</div>
+    </div>
+
+    <div class="flex-break"></div>
+
+    <div id="logbook" class="col">
+        <div class="gear"><a href="/team/edit/{{team.id}}/{{team.name|lower|slugify}}/chapters"><img class="settings-button" src="/assets/images/sprites/icons/600.png" title="Edit"></a></div>
+        <h2>Chapters</h2><br>
+        <div class="list">
+        {% for logbook in logbooks %}
+        {% if logbook.event.id not in reserved_ids %}
+        <a href="{{logbook.deviation.fav_me_url|default:logbook.deviation.da_url}}" class="spaced" style="display:block;" target="_blank"><div class="logbook">
+            <div class="col image"><img src="/assets/images/chapters/{{logbook.event.image}}"></div>
+            <div class="col big name" style="line-height:65px">{{logbook.custom_name|default:logbook.event.name}}</div>
+        </div></a>
+        {% endif %}
+        {% endfor %}
+        {% if inv %}
+        <a href="{{inv.deviation.fav_me_url|default:inv.deviation.da_url}}" class="spaced" style="display:block;" target="_blank"><div class="logbook">
+            <div class="col image"><img src="/assets/images/chapters/{{inv.event.image}}"></div>
+            <div class="col big name" style="line-height:65px">{{inv.custom_name|default:inv.event.name}}</div>
+        </div></a>
+        {% endif %}
+        {% if app %}
+        <a href="{{app.deviation.fav_me_url|default:app.deviation.da_url}}" class="spaced" style="display:block;" target="_blank"><div class="logbook">
+            <div class="col image"><img src="/assets/images/chapters/{{app.event.image}}"></div>
+            <div class="col big name" style="line-height:65px">{{app.custom_name|default:app.event.name}}</div>
+        </div></a>
+        {% endif %}
+        </div>
+    </div>
+    
+    <div id="inventory" class="col">
+        <div class="gear"><a href="/team/edit/{{team.id}}/{{team.name|lower|slugify}}/inventory"><img class="settings-button" src="/assets/images/sprites/icons/600.png" title="Edit"></a></div>
+        <h2>{% if inv %}<a href="{{inv.deviation.url}}" target="_blank">{% endif %}Inventory{% if inv %}</a>{% endif %}</h2><br><br>
+        <div class="list">
+        {% for inv in inventory %}
+        <a href="{{inv.item.url}}" target="_blank">
+        <div class="item">
+            <div class="col image"><img src="/assets/images/items/{{inv.item.image}}"></div>
+            <div class="col big name" style="line-height:65px">{{inv.item.name}}</div>
+        </div>
+        </a>
+        {% endfor %}
+        </div>
+    </div>
+    
+    <div id="meta">
+        <div class="gear"><a href="/team/edit/{{team.id}}/{{team.name|lower|slugify}}/meta"><img class="settings-button" src="/assets/images/sprites/icons/600.png" title="Edit"></a></div>
+        <h2>Team Meta Data</h2><br>
+        <div class="col label">Type</div><div class="col value">{{team.type}}</div><br>
+        <div class="col label">Cameos</div><div class="col value">{{team.cameos}}</div><br>
+        <div class="col label">Tumblr</div><div class="col value">{% if team.tumblr %}<a href="{{team.tumblr}}" target="_blank">View</a>{% else %}None{% endif %}</div><br>
+        <div class="col label">Authors</div><div class="col value">
+        {% for author in team.authors.all %}
+            {{author.image_link|safe}}
+        {% endfor %}
+        </div><br>
+    </div>
+    
+    {% if feed %}
+    <div id="feed" class="col">
+    <h2>Feed</h2><br>
+        {% for post in feed %}
+        <div class="feed-post {{post.type|lower}}">
+            <div class="icon col">{{post.user.image_link|safe}}</div>
+            <div class="status col">
+                <div class="timestamp">{{post.timestamp}}</div>
+                {{post.status}}       
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,154 @@
+#team-flex
+{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+}
+
+#team-flex > div
+{
+    margin:0.5em;
+    padding:0.25em;
+    border:2px solid #BAA687;
+    border-radius:0.5em;
+    position:relative;
+}
+
+.list
+{
+    height:255px;
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+
+#team-flex #teammates
+{
+    flex-grow:1;
+}
+
+#team-flex #rep
+{
+    flex-grow: 3;
+}
+
+#team-flex #favor
+{   
+    flex-grow:1;
+}
+
+#team-flex #logbook
+{
+    flex-grow:1;
+}
+
+#team-flex #inventory
+{
+    flex-grow:3;
+}
+
+#team-flex #meta
+{
+    flex-grow:1;
+}
+
+#team-flex #feed
+{
+    flex-grow:2;
+    width:100%;
+}
+
+#team-form
+{
+    width:100%;
+}
+
+#team-flex #header
+{
+    width:100%;
+    flex-grow: 3;
+    background:#BAA687;
+}
+
+#team-flex #header h1
+{
+    text-align:center;
+    position:absolute;
+    width:80%;
+    margin-left:10%;
+}
+
+#team-flex #favor .col
+{
+    line-height:50px;
+}
+
+#team-flex #favor .label
+{
+    width:45%;
+}
+
+#team-flex #favor .value
+{
+    width:35%;
+    text-align:right;
+}
+
+#team-flex #rep .col
+{
+    line-height:50px;
+}
+
+#team-flex #rep .name
+{
+    width:20%;
+}
+
+#team-flex #rep .rep
+{
+    width:5%;
+    text-align:center;
+}
+
+#team-flex #rep .ranks
+{
+    line-height:normal;
+    width:40%;
+    text-align:center;
+    height:50px;
+}
+
+#team-flex #rep .title
+{
+    width:10%;
+}
+
+#team-flex #meta .label
+{
+    width:30%;
+    line-height:50px;
+}
+
+#team-flex #meta .value
+{
+    width:70%;
+    line-height:50px;
+    height:50px;
+}
+
+h2
+{
+    display:inline;
+}
+
+.teammate
+{
+    background:#BAA687;
+    height:60px;
+    line-height:30px;
+}
+
+#team-flex #inventory h2
+{
+    position:absolute;
+    width:80%;
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Tabiran Tome{% block title %}{% if title %} - {{title}}{% endif %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="/assets/css/style.css?v=2">
+<link rel="stylesheet" type="text/css" href="/assets/css/team.css?v=2">
+<link rel="shortcut icon" href="/assets/images/favicon.ico">
+
+<meta name="author" content="Dr. Dos">
+<meta name="description" content="The Tabiran Tome is a content management system for the DeviantArt group Pokémon: Tales of Tabira.">
+<meta name="keywords" content="Pokemon">
+<link href='http://fonts.googleapis.com/css?family=Libre+Baskerville' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Patua+One' rel='stylesheet' type='text/css'>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
+
+{% block css %}
+{% endblock %}
+
+<!--Analytics-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-67429634-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+
+<section id="left" class="page-left">
+<div id="logo"><a href="/?welcome=1"><img src="/assets/images/logo.png"></a></div>
+<nav>
+    <a href="/team"><div>
+        <div class="col"><img src="/assets/images/badges/trackers-3.png"></div><div class="col text medium sf">Teams</div>
+    </div></a>
+    <a href="/chapter"><div>
+        <div class="col"><img src="/assets/images/badges/keepers-3.png"></div><div class="col text medium sf">Chapters</div>
+    </div></a>
+    <a href="http://www.talesoftabira.com/w/index.php/Main_Page" target="_blank"><div>
+        <div class="col"><img src="/assets/images/badges/scholars-3.png"></div><div class="col text medium sf">Wiki</div>
+    </div></a>
+    <a href="http://talesoftabira.deviantart.com" target="_blank"><div>
+        <div class="col"><img src="/assets/images/badges/artisans-3.png"></div><div class="col text medium sf">Group</div>
+    </div></a>
+    {% if not session.logged_in %}
+    <a href="/sign-in"><div>
+        <div class="col"><img src="/assets/images/da_logo.png"></div><div class="col text medium sf">Sign In</div>
+    </div></a>
+    {% else %}
+    <a href="/"><div>
+        <div class="col"><img name="user-icon" src="{{session.icon}}" alt="{{session.username}}"></div><div class="col text medium sf">Manage Teams</div>
+    </div></a>
+    <a href="/sign-out"><div>
+        <div class="col"><img src="/assets/images/da_logo.png"></div><div class="col text medium sf">Sign Out</div>
+    </div></a>
+    {% endif %}
+    <div class="spacer"></div>
+    {% if session.admin %}
+    <a href="/admin"><div>
+        <div class="col"><img src="/assets/images/buster.png"></div><div class="col text medium sf">Administration</div>
+    </div></a>
+    {% endif %}
+</nav>
+<div onclick="alert(($(window).width() + ' x ' + $(window).height()))">SIZE</div>
+</section>
+
+<section id="right" class="page-right">
+{% block content %}
+{% endblock %}
+</section>
+</body>
+
+{% block scripts %}
+{% endblock %}
+</html>

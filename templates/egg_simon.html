@@ -1,0 +1,105 @@
+{% extends "main.html" %}
+
+{% block css %}
+<style>
+#simon-grid
+{
+    margin:auto;
+    border:8px solid #BAA687;
+    width:200px;
+    height:200px;
+}
+
+#simon-grid .col
+{
+    width:100px;
+    height:100px;
+    margin:0;
+    filter:brightness(20%);
+}
+
+#simon-grid .col img
+{
+    margin-top:25px;
+    margin-left:25px;
+    
+}
+
+#s1
+{
+    background:#0C0;
+    
+}
+
+#s2
+{
+    background:#CC0;
+}
+
+#s3
+{
+    background:#C00;
+}
+
+#s4
+{
+    background:#00C;
+}
+
+#simon-grid .col.fading
+{
+    animation-name: brightness;
+    animation-duration: 0.5s;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    animation-direction: reverse;
+}
+
+@keyframes brightness {
+  0% {
+    filter:brightness(20%);
+  }
+  100% {
+    filter:brightness(100%);
+  }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+var pattern = "1234";
+function flash(pattern)
+{
+    for (var x=0; x < pattern.length; x++)
+    {
+        $("#s"+pattern[x]).addClass("fading");
+        //$("#s"+pattern[x]).removeClass("fading");
+    }
+}
+
+$(document).ready(function (){
+    $("#play").click(function (){
+        flash(pattern);
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+<h1>Simon</h1>
+
+<div id="simon-grid">
+    <div class="col" id="s1"><img src="/assets/images/badges/keepers-3.png"></div><div class="col" id="s2"><img src="/assets/images/badges/trackers-3.png"></div>
+    <br>
+    <div class="col" id="s3"><img src="/assets/images/badges/artisans-3.png"></div><div class="col" id="s4"><img src="/assets/images/badges/scholars-3.png"></div>
+</div>
+
+<div style="width:100%;margin-top:1em;" class="c">
+<input class="big" type="button" value="Play" id="play">
+</div>
+
+</div>
+{% endblock %}

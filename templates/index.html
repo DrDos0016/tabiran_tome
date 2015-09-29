@@ -1,0 +1,138 @@
+{% extends "main.html" %}
+
+{% block css %}
+{% if not welcome %}
+<style>
+.outline-block
+{
+    opacity:0;
+    display:none;
+}
+</style>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function (){
+    $("a[name=register-team]").click(function (){
+        $(".content:first").animate({"opacity":"0"}, 500, function (){
+            $(this).hide();
+            $("div[name=register-team]").show();
+            $("div[name=register-team]").animate({"opacity":"1"}, 500);
+        });
+    });
+    
+    $(".type-button").click(function (){
+        $(".type-button").each(function (){
+            $(this).removeClass("selected");
+            $(this).addClass("grayscale");
+        });
+        var title = $(this).attr("title")
+        $("#type-description").text("- " + title + " -");
+        $("input[name=type]").val(title);
+        $(this).addClass("selected");
+        $(this).removeClass("grayscale");
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+{% if not welcome %}
+<h1>My Teams</h1>
+
+{% for team in teams %}
+<div class="team-overview">
+    <div class="teammates">
+        {% for pokemon in team.teammates.all %}
+            {% if pokemon.status == "Active" %}
+                {{pokemon.bubble|safe}}
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="team-name big"><a href="/team/view/{{team.id}}/{{team.name|slugify}}">{{team.name}}</a></div>
+    <div class="team-meta">
+        <img class="team-type" src="/assets/images/icons/{{team.type|lower}}.png">
+        {% for author in team.authors.all %}
+        <a href="http://{{author.username}}.deviantart.com" target="_blank"><img class="team-authors" src="{{author.icon}}"></a>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+<div class="team-overview grayscale">
+    <div class="teammates">
+    </div>
+    <div class="team-name big"><a class="jsLink" name="register-team">Register a New Team</a></div>
+    <div class="team-meta">
+    </div>
+</div>
+
+</div>
+
+<div name="register-team" class="content outline-block c">
+<form id="register-form" method="POST">
+    {% csrf_token %}
+    <h1 class="l">Register a New Team</h1>
+    <label for="name">Team Name:</label><br>
+    <input name="name" class="big c" maxlength="100"><br><br>
+    
+    <label for="joined">Date Joined:</label><br>
+    <input name="joined" class="big c" value="{{today}}" maxlength="10"><br><br>
+    
+    <label for="type">Team Type:</label><br>
+    <div class="big c icons-div">
+        <img class="type-button selected" src="/assets/images/icons/drawn.png" alt="Drawn" title="Drawn">
+        <img class="type-button grayscale" src="/assets/images/icons/written.png" alt="Written" title="Written">
+        <img class="type-button grayscale" src="/assets/images/icons/hybrid.png" alt="Hybrid" title="Hybrid">
+        <br>
+        <div id="type-description">- Drawn -</div>
+    </div>
+    <input name="type" type="hidden" class="big c" value="Drawn" maxlength="12">
+    <br>
+    
+    <label for="cameos">Team Cameos:</label><br>
+    <select name="cameos" class="big">
+        <option value="No">No cameos</option>
+        <option value="Ask" selected>Ask before cameoing</option>
+        <option value="Non-Speaking">Non-speaking Only</option>
+        <option value="Yes">Yes please!</option>
+    </select>
+    <br><br>
+    
+    <input type="submit" class="big" value="Register Team">
+    
+</form>
+<div style="text-align:left">
+<p>Once your team has been registered, you'll be able to add Pokémon, set your reputation and favor, submit logbook entries, manage your team's inventory, and give access to your team to other group members.</p>
+
+<p>Your team's information may be adjusted at any time. Please make sure team data is accurate and follows the group's <a href="http://talesoftabira.deviantart.com/journal/FAQ-and-Rules-545187090" target="_blank"> rules</a>!</p>
+
+<p>Note that your team will not show up publicly until an admin has verified your application, however you can still directly link others to the team's page.</p>
+
+{{team.teammates}}
+</div>
+</div>
+{% endif %}
+{% if welcome %}
+<h1>Tabiran Tome</h1>
+
+<div class="outline-block">
+<h2 class="c">Welcome to the Tabiran Tome!</h2>
+
+<p>The Tabiran Tome is a companion website for members of <a href="http://talesoftabira.deviantart.com/" target="_blank">Pokémon: Tales of Tabira</a>, 
+a collaborative storytelling group.</p>
+
+<p>The Tome is designed as a way for members to help keep track of their content in the group, and allow others to easily browse and search teams and submissions.
+Once you sign in via oAuth, you'll be able to register your teams, submit chapter tasks, track favor and reputation, and record your team's inventory.</p>
+
+<p>Upon registering a team, you're immediately given complete and unlimited access to its information. Though an admin will have to verify your team before it shows up in
+public team/chapter listings, you can immediately begin submitting content. The Tome is designed to operate on trust, allowing you to adjust team information at any time with
+the assumption that you'll be providing accurate information that abides by the group's rules. Changes are logged into a team feed letting others easily follow how your team 
+may grow and change over time.</p>
+</div>
+</div>
+{% endif %}
+{% endblock %}

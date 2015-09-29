@@ -1,0 +1,31 @@
+<Directory /var/projects/tales_of_tabira/assets>
+    Order deny,allow
+    Allow from all
+</Directory>
+
+WSGIPythonPath /var/projects/tales_of_tabira:/var/projects/tales_of_tabira/virt/lib/python2.7/site-packages
+<VirtualHost *:80>
+    # Make sure apache has access to /var/www/.python-eggs
+    Alias /assets/ /var/projects/tales_of_tabira/assets/
+    WSGIDaemonProcess site51 python-path=/var/projects/tales_of_tabira:/var/projects/tales_of_tabira/virt/lib/python2.7/site-packages
+    WSGIProcessGroup site51
+    WSGIScriptAlias / /var/projects/tales_of_tabira/tabira/wsgi.py
+    ServerAdmin doctordos@gmail.com
+    ServerName tome.pokyfriends.com
+    ServerAlias tome.pi
+
+    <Directory /var/projects/tales_of_tabira/tabira>
+        <Files wsgi.py>
+            Order deny,allow
+            Allow from all
+        </Files>
+    </Directory>
+
+    ErrorLog "/var/log/apache2/tales_of_tabira/error.log"
+    CustomLog "/var/log/apache2/tales_of_tabira/access.log" combined
+
+    # Strip www subdomain
+    RewriteEngine on
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ http://%1%{REQUEST_URI} [R=301,QSA,NC,L]
+</VirtualHost>

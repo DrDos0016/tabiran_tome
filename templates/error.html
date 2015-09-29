@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="content">
+<div class="outline-block">
+    <h1 class="c">An Error Has Occurred!</h1>
+    <p>Something went wrong with your request! You may wish to refresh, or start again. The error details can give you a hint as to what went wrong when validating form data.</p>
+    
+    <p>If the problem persists you should tell a staff member! Be sure to pass along the error details and any information on what you were doing when the error occurred</p>
+
+    <h2>Error Details</h2><br>
+    <textarea style="width:100%;height:300px;border:2px solid #BAA687;background:#D4CDAC" readonly>{% for error in errors %}{{error}}{% endfor %}====================
+{{meta}}</textarea>
+</div>
+
+</div>
+{% endblock %}

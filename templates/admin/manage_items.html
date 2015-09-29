@@ -1,0 +1,93 @@
+{% extends "main.html" %}
+
+{% block css %}
+<style>
+.outline-block .col
+{
+    width:48%;
+    text-align:left;
+    vertical-align:middle;
+}
+
+.outline-block .col label
+{
+    width:8em;
+    display:inline-block;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function (){
+    $("select[name=id]").change(function (){
+        if ($(this).val() == "new")
+            window.location = "/admin/manage-items";
+        else
+            window.location = "/admin/manage-items?item="+$(this).val();
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+<h1>Manage Events</h1>
+
+<form method="POST">
+<div class="outline-block">
+    {% csrf_token %}
+    <div class="col">
+        <label for="id">Item</label>
+        <select name="id">
+            <option value="new">- New Item -</option>
+            {% for item in items %}
+            <option value="{{item.id}}"{% if wip.id == item.id %} selected{% endif %}>{{item.name}}</option>
+            {% endfor %}
+        </select><br>
+    </div>
+    <div class="col">
+        The item to be managed.
+    </div>
+    <div class="spacer"></div>
+    
+    <div class="col">
+        <label for="name">Name</label> <input name="name" value="{{wip.name}}"><br>
+    </div>
+    <div class="col">
+        The name of the item.
+    </div>
+    <div class="spacer"></div>
+    
+    <div class="col">
+        <label for="image">Image</label> <input name="image" value="{{wip.image}}"><br>
+    </div>
+    <div class="col">
+        The URL of the image for this item.<br>
+        (ex: http://www.talesoftabira.com/w/images/3/36/Spiritoftechnique.png)
+    </div>
+    <div class="spacer"></div>
+    
+    <div class="col">
+        <label for="active">Active</label> <input name="active" type="checkbox" value="1"{% if wip.active %} checked{% endif %}><br>
+    </div>
+    <div class="col">
+        Check this box to allow users to put this item in their teams' inventories.
+    </div>
+    <div class="spacer"></div>
+    
+    <div class="col">
+        <label for="url">URL</label> <input name="url" value="{{wip.url}}"><br>
+    </div>
+    <div class="col">
+        The URL to open when the item is clicked on in somebody's inventory. This should link directly to the section on the wiki with the item.<br>
+        (ex: http://www.talesoftabira.com/wiki/Items#Symbol_of_Charity)
+    </div>
+    <div class="spacer"></div>
+    
+    <input type="submit" value="Save Item">
+</div>
+</form>
+
+</div>
+{% endblock %}

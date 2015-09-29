@@ -1,0 +1,38 @@
+{% extends "main.html" %}
+
+{% block css %}
+<style>
+.content h2
+{
+    width:100%;
+    display:block;
+    text-align:center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+<h1>Administrative Functions</h1>
+
+<h2>Team Related</h2>
+<div class="outline-block"><a href="/admin/verify-teams">Verify Teams</a></div>
+<div class="outline-block"><a href="/admin/delete-team">Delete Team</a></div>
+<div class="outline-block"><a href="/admin/delete-pokemon">Delete Pokémon</a></div>
+<div class="outline-block"><a href="/admin/remove-author">Remove Author</a></div>
+<br>
+
+<h2>Event Related</h2>
+<div class="outline-block"><a href="/admin/manage-events">Manage Events</a></div>
+<br>
+
+<h2>Item Related</h2>
+<div class="outline-block"><a href="/admin/manage-items">Manage Items</a></div>
+<br>
+
+<h2>Misc</h2>
+<div class="outline-block"><a href="/admin/powerless">Powerless View (until next login)</a></div>
+<div class="outline-block"><a href="http://google.com/analytics" target="_blank">Google Analytics</a></div>
+
+</div>
+{% endblock %}

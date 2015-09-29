@@ -1,0 +1,8 @@
+# Ignore
+*.pyc
+*.pnws
+private_settings.py
+assets/images/sprites/*
+assets/data/logins/*.json
+virt/*
+virt273/*

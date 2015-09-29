@@ -1,0 +1,144 @@
+{% extends "main.html" %}
+{% load pokemon_lists %}
+
+{% block css %}
+<style>
+input[type=radio], input[type=checkbox]
+{
+    width:auto;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+var filters = "hidden";
+
+$(document).ready(function (){
+    $("#filters-button").click(function (){
+        if (filters == "hidden")
+        {
+            $("#filters").show();
+            $("#filters").animate({"opacity":"1"}, 500);
+            $(this).val("Apply Filters");
+            filters = "displayed";
+        }
+        else
+        {
+            document.forms[0].submit();
+        }
+    });
+    
+    {% if not teams %}$("#filters-button").click();{% endif %}
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+<h1>{{method|title}} Listings</h1>
+
+<form method="GET" name="filter-form">
+<div id="filters" class="filters" style="display:none;opacity:0">
+    <div>
+        <label for="name">Team Name</label><br>
+        <input name="name" value="{{request.GET.name}}" maxlength="100">
+    </div>
+    <div>
+        <label for="author">Author</label><br>
+        <input name="author" value="{{request.GET.author}}" maxlength="20">
+    </div>
+    <div>
+        <label for="species">Contains Pokémon</label><br>
+        {% pokemon_select request.GET.species True %}<br>
+        <input name="match" type="radio" value="species"{% if request.GET.match != "evolution" %} checked{% endif %}> Species <input name="match" type="radio" value="evolution"{% if request.GET.match == "evolution" %} checked{% endif %}> Evolution Line<br>
+        Active Pokémon Only <input type="checkbox" name="active" value="1"{% if request.GET.active %} checked{% endif %}>
+    </div>
+    <div>
+        <label for="teammate">Pokémon Name</label><br>
+        <input name="teammate" value="{{request.GET.teammate}}" maxlength="80">
+    </div>
+    <div class="flex-break"></div>
+    <div>
+        <label for="cameos">Cameo Preference</label><br>
+        <select name="cameos">
+            <option value="Any">- Any -</option>
+            <option value="No"{% if request.GET.cameos == 'No' %} selected{% endif %}>No cameos</option>
+            <option value="Ask"{% if request.GET.cameos == 'Ask' %} selected{% endif %}>Ask before cameoing</option>
+            <option value="Non-Speaking"{% if request.GET.cameos == 'Non-Speaking' %} selected{% endif %}>Non-speaking Only</option>
+            <option value="Yes"{% if request.GET.cameos == 'Yes' %} selected{% endif %}>Yes please!</option>
+        </select>
+    </div>
+    <div>
+        <label for="tumblr">Has Tumblr</label><br>
+        <select name="tumblr">
+            <option value="Any">- Any -</option>
+            <option value="No"{% if request.GET.tumblr == 'No' %} selected{% endif %}>No </option>
+            <option value="Yes"{% if request.GET.tumblr == 'Yes' %} selected{% endif %}>Yes</option>
+        </select>
+    </div>
+    <div>
+        <label for="type">Team Type</label><br>
+        <select name="type">
+            <option value="Any">- Any -</option>
+            <option value="Drawn"{% if request.GET.type == 'Drawn' %} selected{% endif %}>Drawn</option>
+            <option value="Written"{% if request.GET.type == 'Written' %} selected{% endif %}>Written</option>
+            <option value="Hybrid"{% if request.GET.type == 'Hybrid' %} selected{% endif %}>Hybrid</option>
+        </select>
+    </div>
+    <div>
+        <label for="sort">Sort Results</label><br>
+        <select name="sort">
+            <option value="latest"{% if request.GET.sort == 'latest' %} selected{% endif %}>Latest</option>
+            <option value="name"{% if request.GET.sort == 'name' %} selected{% endif %}>Team Name</option>
+            <option value="random"{% if request.GET.sort == 'random' %} selected{% endif %}>Random</option>
+        </select>
+    </div>
+    <input type="hidden" name="page" value="1">
+</div>
+</form>
+
+<div class="pages">
+    <a href="{{base_url}}?{{prev}}" class="button-link" style="float:left">Previous Page</a>
+    <input class="big c" id="filters-button" type="button" value="Show Filters">
+    <a href="{{base_url}}?{{next}}" class="button-link" style="float:right">Next Page</a>
+</div>
+
+{% for team in teams %}
+<div class="team-overview">
+    <div class="teammates">
+        {% for pokemon in team.teammates.all %}
+            {% if pokemon.status == "Active" %}
+                {{pokemon.bubble|safe}}
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="team-name big">
+        <a href="/team/view/{{team.id}}/{{team.name|slugify}}">{{team.name}}</a>
+        {% if method == "chapter" %}
+        <ul class="l" style="margin-top:0;border-top:2px solid #D4CDAC;max-height:4em;overflow:auto;">
+            {% for entry in team.logbook %}
+            <li><a href="{{entry.deviation.url}}" target="_blank">{{entry.deviation.title}}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    
+    <div class="team-meta">
+        <img class="team-type" src="/assets/images/icons/{{team.type|lower}}.png">
+        {% for author in team.authors.all %}
+        <a href="http://{{author.username}}.deviantart.com" target="_blank"><img class="team-authors" src="{{author.icon}}"></a>
+        {% endfor %}
+    </div>
+</div>
+{% empty %}
+<div class="big c" style="width:100%">No teams matched given criteria!</div>
+{% endfor %}
+
+<div class="pages" style="margin-top:0.5em;">
+    <a href="{{base_url}}?{{prev}}" class="button-link" style="float:left">Previous Page</a>
+    {% if method == "team" %}<a href="#" class="button-link">Previous Page</a>{% endif %}
+    <a href="{{base_url}}?{{next}}" class="button-link" style="float:right">Next Page</a>
+</div>
+</div>
+{% endblock %}

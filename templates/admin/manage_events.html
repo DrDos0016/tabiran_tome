@@ -1,0 +1,117 @@
+{% extends "main.html" %}
+
+{% block css %}
+<style>
+.outline-block .col
+{
+    width:48%;
+    text-align:left;
+    vertical-align:middle;
+}
+
+.outline-block .col label
+{
+    width:8em;
+    display:inline-block;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function (){
+    $("select[name=id]").change(function (){
+        if ($(this).val() == "new")
+            window.location = "/admin/manage-events";
+        else
+            window.location = "/admin/manage-events?event="+$(this).val();
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+<h1>Manage Events</h1>
+
+<form method="POST">
+<div class="outline-block">
+    {% csrf_token %}
+    <div class="col">
+        <label for="id">Event</label>
+        <select name="id">
+            <option value="new">- New Event -</option>
+            {% for event in events %}
+            <option value="{{event.id}}"{% if wip.id == event.id %} selected{% endif %}>[{{event.key}}] {{event.name}}</option>
+            {% endfor %}
+        </select><br>
+    </div>
+    <div class="col">
+        The event to be managed.
+    </div>
+    <div class="spacer"></div>
+    
+    <div class="col">
+        <label for="key">Key</label> <input name="key" value="{{wip.key}}"><br>
+    </div>
+    <div class="col">
+        An identifier for the event. Ideally in the format c[chapter#][guild][task#]<br>(ex: c1t3, c2k1, etc)
+    </div>
+    <div class="spacer"></div>
+    
+    <div class="col">
+        <label for="name">Name</label> <input name="name" value="{{wip.name}}"><br>
+    </div>
+    <div class="col">
+        The name of the event.
+    </div>
+    <div class="spacer"></div>
+    
+    <div class="col">
+        <label for="image">Image</label> <input name="image" value="{{wip.image}}"><br>
+    </div>
+    <div class="col">
+        The URL of the image to use to represent this event. This is what gets posted in the journal about this event.<br>
+        (ex: http://i.cubeupload.com/eCQseU.png)
+    </div>
+    <div class="spacer"></div>
+    
+    <div class="col">
+        <label for="active">Active</label> <input name="active" type="checkbox" value="1"{% if wip.active %} checked{% endif %}><br>
+    </div>
+    <div class="col">
+        Check this box to allow users to submit content for this event.
+    </div>
+    <div class="spacer"></div>
+    
+    <div class="col">
+        <label for="timestamp">Timestamp</label> <input name="timestamp" value="{{wip.timestamp|default:0}}"><br>
+    </div>
+    <div class="col">
+        The cutoff for when submissions will be marked late. Use <a href="http://www.epochconverter.com/" target="_blank">Epoch Converter</a>'s Human date to timestamp tool set to GMT
+        and enter the Epoch Timestamp value it generates.
+    </div>
+    <div class="spacer"></div>
+    
+    {% comment %}
+    <div class="col">
+        <label for="folder">DA Folder</label>
+        <select name="folder">
+            <option value="">- NONE -</option>
+            {% for gallery in galleries %}
+            <option value="{{gallery.id}}"{% if wip.folder_id == gallery.id %} selected{% endif %}>{{gallery.name}}</option>
+            {% endfor %}
+        </select><br>
+    </div>
+    <div class="col">
+        The group folder which will contain the submissions for this event.
+    </div>
+    <div class="spacer"></div>
+    {% endcomment %}
+    
+    <input type="submit" value="Save Event">
+</div>
+</form>
+
+</div>
+{% endblock %}

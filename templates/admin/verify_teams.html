@@ -1,0 +1,40 @@
+{% extends "main.html" %}
+
+{% block css %}
+<style>
+td.name
+{
+    width:70%;
+    text-align:left;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+<h1>Verify Teams</h1>
+
+<form method="POST" action="/admin/verify-teams">
+<div class="outline-block">
+    {% csrf_token %}
+    <table class="data-table">
+        <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Verify</th>
+        </tr>
+    {% for team in teams %}
+        <tr>
+            <td class="name"><a href="/team/view/{{team.id}}/{{team.name|slugify}}" target="_blank">{{team.name}}</a></td>
+            <td class="id">{{team.id}}</td>
+            <td class="check"><input name="verify" type="checkbox" value="{{team.id}}"{% if checked == team.id %} checked{% endif %}></td>
+        </tr>
+    {% endfor %}
+    </table>
+    <br>
+    <input type="submit" value="Verify Teams">
+</div>
+</form>
+
+</div>
+{% endblock %}

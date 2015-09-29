@@ -1,0 +1,571 @@
+{% extends "main.html" %}
+{% load guild_ranks %}
+{% load pokemon_lists %}
+
+{% block css %}
+{% if section == "teammates" %}
+<style>
+.teammate-edit
+{
+    width:100%;
+    margin-top:0.25em;
+}
+
+.teammate-edit > div.col
+{
+    width:15%;
+    text-align:center;
+}
+
+
+input
+{
+    padding:2px;
+}
+
+input, select
+{
+    width:95%;
+    font-size:14pt;
+}
+
+input[type=submit]
+{
+    width:12em;
+}
+</style>
+{% endif %}
+{% if section == "reputation" %}
+<style>
+#rep input
+{
+    width:100%;
+    text-align:center;
+    font-size:14pt;   
+}
+
+#rep input[type=submit]
+{
+    width:12em;
+}
+</style>
+{% endif %}
+
+{% if section == "favor" %}
+<style>
+input[name=earned], input[name=spent], input[name=favor]
+{
+    width:3em;
+    text-align:center;
+    font-size:14pt;   
+}
+</style>
+{% endif %}
+
+{% if section == "chapters" %}
+<style>
+#preview
+{
+    text-align:center;
+    border-top:2px solid #BAA687;
+}
+
+select
+{
+    width:50%;
+}
+
+.custom
+{
+    display:none;
+}
+
+.maxed
+{
+    display:none;
+}
+</style>
+{% endif %}
+
+{% if section == "meta" %}
+<style>
+input[name=earned], input[name=spent], input[name=favor]
+{
+    width:3em;
+    text-align:center;
+    font-size:14pt;   
+}
+</style>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if section == "teammates" %}
+<script>
+$(document).ready(function (){
+    $("select[name=species]").change(function (){
+        var val = $(this).val();
+        $(this).parent().parent().find(".pokemon-bubble").find("img").attr("src", "/assets/images/sprites/icons/"+val+".png");
+    });
+    
+    $("input[name=status]").keyup(function (){
+        var val = $(this).val();
+        if (val.toLowerCase() == "active")
+            $(this).parent().parent().find(".pokemon-bubble").removeClass("grayscale");
+        else
+            $(this).parent().parent().find(".pokemon-bubble").addClass("grayscale");
+    });
+    
+    $("input[name=shiny-check]").change(function (){
+        alert("Box");
+        if ($(this).prop("checked"))
+        {
+            $(this).parent().parent().find(".pokemon-bubble").addClass("shiny");
+            $(this).parent().find("input[name=shiny]").val("1");
+        }
+        else
+        {
+            $(this).parent().parent().find(".pokemon-bubble").removeClass("shiny");
+            $(this).parent().find("input[name=shiny]").val("0");
+        }
+    });
+});
+</script>
+{% endif %}
+{% if section == "reputation" %}
+<script>
+$(document).ready(function (){
+    $("#rep input").change(function (){
+        render_badges();
+    });
+    
+    render_badges();
+});
+
+function render_badges()
+{
+    var values = [];
+    var letters = ["k", "t", "s", "a"]
+    var ranks = {
+        "k":["Initiate", "Preserver", "Warden", "Guardian"], 
+        "t":["Initiate", "Scout", "Explorer", "Adventurer"], 
+        "s":["Initiate", "Protégé", "Lector", "Professor"], 
+        "a":["Initiate", "Apprentince", "Adept", "Virtuoso"]
+    };
+    
+    $("#rep input[name^=rep]").each(function (){
+        var val = $(this).val();
+        values.push(val);
+    });
+    
+    $(".ranks img").each(function (){
+        $(this).addClass("darkened");
+        $("div[name^=title]").text("Unaffiliated");
+    });
+    
+    for (var x = 0; x < 4; x++)
+    {
+
+        if (values[x] == 0)
+            $("div[name=title-"+letters[x]+"]").text("Unaffiliated");
+        else if (values[x] < 7)
+        {
+            $("div[name=title-"+letters[x]+"]").text(ranks[letters[x]][0]);
+        }
+        if (values[x] >= 7)
+        {
+            $("img[name="+letters[x]+"-1]").removeClass("darkened");
+            $("div[name=title-"+letters[x]+"]").text(ranks[letters[x]][1]);
+        }
+        if (values[x] >= 15)
+        {
+            $("img[name="+letters[x]+"-2]").removeClass("darkened");
+            $("div[name=title-"+letters[x]+"]").text(ranks[letters[x]][2]);
+        }
+        if (values[x] >= 99)
+        {
+            $("img[name="+letters[x]+"-3]").removeClass("darkened");
+            $("div[name=title-"+letters[x]+"]").text(ranks[letters[x]][3]);
+        }
+    }
+}
+</script>
+{% endif %}
+
+{% if section == "favor" %}
+<script>
+$(document).ready(function (){
+    $("input").change(function (){
+        render_favor();
+    });
+    
+    render_favor();
+});
+
+function render_favor()
+{
+    var earned = $("input[name=earned]").val();
+    var spent = $("input[name=spent]").val();
+    $("input[name=favor]").val(earned - spent);
+}
+</script>
+{% endif %}
+{% if section == "chapters" %}
+<script>
+function preview(da_url)
+{
+    var url = "http://backend.deviantart.com/oembed?url=" + da_url + "&format=jsonp&callback=?";
+    console.log(url);
+    $.getJSON(url, function (data){
+        console.log(data)
+        $("#preview").html("");
+        
+        if (data["thumbnail_url"])
+            $("#preview").append("<img src='"+data["thumbnail_url"]+"'>");
+        else if (data["html"])
+            $("#preview").append("<div class='l'>"+data["html"]+"...</div>");
+    });
+}
+
+$(document).ready(function (){
+    $("select[name=submission]").change(function (){
+        var task_id = $(this).find("option:selected").data("task-id");
+        var deviation_id = $(this).find("option:selected").data("deviation-id");
+        var custom_name = $(this).find("option:selected").data("custom-name");
+        
+        $("select[name=event_id]").val(task_id).change();
+        $("select[name=deviation_id]").val(deviation_id);
+        $("input[name=custom_name]").val(custom_name);
+        preview($("select[name=deviation_id]").find("option:selected").data("da_url"));
+    });
+    
+    $("select[name=deviation_id]").change(function (){
+        preview($(this).find("option:selected").data("da_url"));
+    });
+    
+    $("select[name=event_id]").change(function (){
+        if ($(this).find("option:selected").val() == -100)
+        {
+            $(".custom").show();
+        }
+        else
+        {
+            $(".custom").hide();
+            $("input[name=custom_name]").val("");
+        }
+    });
+    
+    preview($("select[name=deviation_id]").find("option:selected").data("da_url"));
+});
+</script>
+{% endif %}
+{% if section == "inventory" %}
+<script>
+function preview(img)
+{
+    $("#preview").html("<img src='/assets/images/items/"+img+"'>");
+}
+
+$(document).ready(function (){
+    $("select[name=item]").change(function (){
+        preview($(this).find("option:selected").data("img"));
+    });
+    
+    preview($("select[name=item]").find("option:selected").data("img"));
+});
+</script>
+{% endif %}
+{% if section == "meta" %}
+<script>
+$(document).ready(function (){
+    $(".type-button").click(function (){
+        $(".type-button").each(function (){
+            $(this).removeClass("selected");
+            $(this).addClass("grayscale");
+        });
+        var title = $(this).attr("title")
+        $("#type-description").text("- " + title + " -");
+        $("input[name=type]").val(title);
+        $(this).addClass("selected");
+        $(this).removeClass("grayscale");
+    });
+    
+    $(".type-button.selected").click();
+});
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="content">
+<div class="outline-block">
+{% if section == "team" %}
+    <h1>Edit Team</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="name">Team Name:</label><br>
+        <input name="name" class="big c" maxlength="100" value="{{team.name}}"><br><br>
+        
+        <label for="joined">Date Joined:</label><br>
+        <input name="joined" class="big c" value="{{team.joined|date:'Y-m-d'}}" maxlength="10"><br><br>
+        
+        <input type="submit" class="big" value="Save Changes">
+    </form>
+{% endif %}
+{% if section == "teammates" %}
+    <h1>Edit Teammates</h1>
+    <form method="POST">
+    {% csrf_token %}
+    {% for poke in team.teammates.all %}
+    <div class="teammate-edit l" id="pokemon-{{forloop.counter}}">
+        <input type="hidden" name="id" value="{{poke.id}}">
+        <div class="col">{{poke.bubble|safe}}</div>
+        <div class="col">
+            Name<br>
+            <input name="name" value="{{poke.name}}" maxlength="80">
+        </div>
+        <div class="col">
+            Species<br>
+            {% pokemon_select poke.species %}
+        </div>
+        <div class="col">
+            Gender<br>
+            <input name="gender" value="{{poke.gender}}" maxlength="20">
+        </div>
+        <div class="col">
+            Status<br>
+            <input name="status" value="{{poke.status}}" maxlength="20">
+        </div>
+        <div class="col">
+            Shiny<br>
+            <input name="shiny-check" value="1" type="checkbox"{% if poke.shiny %} checked{% endif %}>
+            <input name="shiny" value="{% if poke.shiny %}1{% else %}0{% endif %}" type="hidden">
+        </div>
+    </div>
+    {% endfor %}
+    <h1>New Teammate</h1>
+    <div class="teammate-edit l" id="pokemon-new">
+        <input type="hidden" name="new" value="">
+        <div class="col">
+            <div class="pokemon-bubble col"><img src="/assets/images/sprites/icons/-1.png" alt="Egg" title="Egg"></div>
+        </div>
+        <div class="col">
+            Name<br>
+            <input name="name" value="" maxlength="80">
+        </div>
+        <div class="col">
+            Species<br>
+            {% pokemon_select -1 %}
+        </div>
+        <div class="col">
+            Gender<br>
+            <input name="gender" value="" maxlength="20">
+        </div>
+        <div class="col">
+            Status<br>
+            <input name="status" value="Active" maxlength="20">
+        </div>
+        <div class="col">
+            Shiny<br>
+            <input name="shiny-check" value="1" type="checkbox">
+            <input name="shiny" value="0" type="hidden">
+        </div>
+    </div>
+    
+    <div class="col">Why are these values changing?</div><div class="col"><input name="why" type="text" value="" maxlength="80" class="l"></div>
+    <input type="submit" class="big" value="Save Changes">
+    </form>
+    
+    <p class="l">Your Pokémon's status is meant to help others working with your team figure out if a Pokémon who would be around for a current task, as well as 
+    allowing for tracking of former teammates who may have appeared in past submissions to still show up in searches for that Pokémon.</p>
+    
+    <p class="l">You may set this status to anything you like such as "Retired", "Deceased", "Missing in Action", or anything else. Do note however, that if a team member 
+    isn't set to <b>"Active"</b>, they will appear grayed out on your team's page.</p>
+    
+    <p class="l">If a Pokémon will no longer be on your team, adjust their status accordingly. If you've mistakenly added a Pokémon who shouldn't have been on your team
+    in the first place that should be deleted entirely, contact an admin.</p>
+    
+{% endif %}
+{% if section == "reputation" %}
+    <h1>Edit Reputation</h1>
+    <div id="team-flex">
+    <form method="POST" id="rep">
+        {% csrf_token %}
+        <div class="col name">Keepers</div>
+        <div class="col rep"><input name="rep-k" value="{{team.rep_keepers}}" maxlength="2"></div>
+        <div class="col ranks">{% rank_images "Keepers" team.rep_keepers %}</div>
+        <div class="col title" name="title-k">{% rank "Keepers" team.rep_keepers %}</div>
+        <br>
+        <div class="col name">Trackers</div>
+        <div class="col rep"><input name="rep-t" value="{{team.rep_trackers}}" maxlength="2"></div>
+        <div class="col ranks">{% rank_images "Trackers" team.rep_trackers %}</div>
+        <div class="col title" name="title-t">{% rank "Trackers" team.rep_trackers %}</div>
+        <br>
+        <div class="col name">Scholars</div>
+        <div class="col rep"><input name="rep-s" value="{{team.rep_scholars}}" maxlength="2"></div>
+        <div class="col ranks">{% rank_images "Scholars" team.rep_scholars %}</div>
+        <div class="col title" name="title-s">{% rank "Scholars" team.rep_scholars %}</div>
+        <br>
+        <div class="col name">Artisans</div>
+        <div class="col rep"><input name="rep-a" value="{{team.rep_artisans}}" maxlength="2"></div>
+        <div class="col ranks">{% rank_images "Artisans" team.rep_artisans %}</div>
+        <div class="col title" name="title-a">{% rank "Artisans" team.rep_artisans %}</div>
+        <br><br>
+        <div class="col">Why are these values changing?</div><div class="col"><input name="why" type="text" value="" maxlength="80" class="l"></div>
+        <br><br>
+        <input type="submit" class="big" value="Save Changes">
+    </form>
+    </div>
+{% endif %}
+{% if section == "favor" %}
+    <h1>Edit Favor</h1>
+    <div id="team-flex">
+    <form method="POST" id="favor">
+        {% csrf_token %}
+        <div class="col label">Earned</div> <div class="col value"><input name="earned" value="{{team.favor_earned}}" maxlength="3"></div>
+        <br>
+        <div class="col label">Spent</div> <div class="col value"><input name="spent" value="{{team.favor_spent}}" maxlength="3"></div>
+        <br>
+        <div class="col label">Remaining</div> <div class="col value"><input name="favor" value="{{team.favor}}" maxlength="3" readonly></div>
+        <br><br>
+        <div class="col label">Why are these values changing?</div><div class="col value"><input name="why" type="text" value="" maxlength="80"></div>
+        <br><br>
+        <input type="submit" class="big" value="Save Changes">
+    </form>
+    </div>
+{% endif %}
+{% if section == "chapters" %}
+    <h1>Edit Chapters</h1>
+    <form method="POST" id="chapters">
+        {% csrf_token %}
+        <label for="submission">Submission to Manage:</label><br>
+        <select name="submission">
+                <option value="NEW" data-task-id="N/A" data-deviation-id="N/A" data-custom-name="" selected>New Submission</option>
+            {% for submission in submissions %}
+                <option value="{{submission.id}}" data-task-id="{{submission.event.id}}" data-deviation-id="{{submission.deviation.id}}" data-custom-name="{{submission.custom_name}}">
+                [{{submission.event.key}}] - {{submission.deviation.title}}
+                </option>
+            {% endfor %}
+        </select>
+        
+        <br><br>
+        
+        <label for="event">Chapter Task:</label><br>
+        <select name="event_id">
+            <option value="N/A" selected>- Select A Task -</option>
+        {% for event in events %}
+            {% ifchanged %}
+                {% if event.key.0 == "c" %}
+                <optgroup label="Chapter {{event.key.1}}"></optgroup>
+                {% else %}
+                <optgroup label="Supplemental"></optgroup>
+                {% endif %}
+            {% endifchanged %}
+            <option value="{{event.id}}"{% if event.current_submitted >= event.max_submissions %} class="maxed"{% endif %}>
+            [{{event.key}}] - {{event.name}} {% if event.max_submissions != 1 %}({{event.current_submitted}}/{{event.max_submissions}}){% endif %}
+            </option>
+        {% endfor %}
+        </select>
+        <br>
+        <br>
+        
+        <div class="custom">
+        <label for="custom_name">Custom Name:</label><br>
+        <input name="custom_name" maxlength="80">
+        <br><br>
+        </div>
+        <!--<input name="order" maxlength="4">-->
+        
+        <label for="deviation_id">Deviation:</label><br>
+        <select name="deviation_id">
+            <option value="N/A" selected>- Select A Deviation -</option>
+        {% for deviation in deviations %}
+            {% ifchanged %}
+                <optgroup label="{{deviation.gallery.name}}"></optgroup>
+            {% endifchanged %}
+            <option value="{{deviation.id}}" data-da_url="{{deviation.da_url}}">{{deviation.title}}</option>
+        {% endfor %}
+        </select>
+        <br><br>
+        <input type="submit" value="DELETE Chapter" name="method">
+        <input type="submit" value="Save Chapter" name="method">
+        
+        {% if newbie %}
+        <br>
+        <p>Your team's first submitted chapter must be its team application. After the application has been set you'll be able to submit any chapter you wish.</p>
+        {% endif %}
+        
+        <div id="preview">
+        </div>
+        
+    </form>
+{% endif %}
+{% if section == "inventory" %}
+    <h1>Edit Team Inventory</h1>
+    <form method="POST" id="inventory">
+        {% csrf_token %}
+        <label for="item">Item:</label><br>
+        <select name="item">
+            {% for item in items %}
+            <option value="{{item.id}}" data-img="{{item.image}}">{{item.name}}</option>
+            {% endfor %}
+        </select>
+        <div id="preview" style="float:right">
+        </div>
+        <br><br>
+        <label for="action">Action:</label><br>
+        <input type="radio" name="action" value="Add" checked> Add to team's inventory<br>
+        <input type="radio" name="action" value="Remove"> Remove from team's inventory<br>
+        <br><br>
+        <label for="why">Why is this item being added/removed? </label><br>
+        <input type="text" name="why" maxlength="80"
+        <br><br>
+        
+        <input type="submit" class="big" value="Save Changes">
+        
+    </form>
+{% endif %}
+{% if section == "meta" %}
+    <h1>Edit Team Meta Data</h1>
+    <form method="POST" id="meta" class="c">
+        {% csrf_token %}
+        <label for="type">Team Type:</label><br>
+        <div class="big c icons-div">
+            <img class="type-button {% if team.type == 'Drawn' %}selected{% else %}grayscale{% endif %}" src="/assets/images/icons/drawn.png" alt="Drawn" title="Drawn">
+            <img class="type-button {% if team.type == 'Written' %}selected{% else %}grayscale{% endif %}" src="/assets/images/icons/written.png" alt="Written" title="Written">
+            <img class="type-button {% if team.type == 'Hybrid' %}selected{% else %}grayscale{% endif %}" src="/assets/images/icons/hybrid.png" alt="Hybrid" title="Hybrid">
+            <br>
+            <div id="type-description">- {{team.type}} -</div>
+        </div>
+        <input name="type" type="hidden" class="big c" value="{{team.type}}" maxlength="12" readonly>
+        <br>
+        <label for="cameos">Team Cameos:</label><br>
+        <select name="cameos" class="big">
+            <option value="No"{% if team.cameos == "No" %} selected{% endif %}>No cameos</option>
+            <option value="Ask"{% if team.cameos == "Ask" %} selected{% endif %}>Ask before cameoing</option>
+            <option value="Non-Speaking"{% if team.cameos == "Non-Speaking" %} selected{% endif %}>Non-speaking Only</option>
+            <option value="Yes"{% if team.cameos == "Yes" %} selected{% endif %}>Yes please!</option>
+        </select>
+        <br>
+        <label for="tumblr">Team Tumblr:</label><br>
+        <input name="tumblr" type="text" class="big c" value="{{team.tumblr}}" maxlength="200">
+        <br>
+        <label>Current Authors:</label><br>
+        {% for author in team.authors.all %}
+            <a href="http://{{author.username}}.deviantart.com" target="blank">
+                <div class="author-block big"><img src="{{author.icon}}">{{author.username|title}}</div>
+            </a>
+        {% endfor %}
+        <label for="author">New Author:</label><br>
+        <input name="author" type="text" class="big c" value=""><br>
+        
+        <input type="submit" class="big" value="Save Changes">
+        
+        <p class="l">When adding a new author, the account being added must have logged into the Tabiran Tome website at some point.</p>
+        
+        <p class="l">Please contact an administrator if you need to remove a user's access from a team.</p>
+    </form>
+{% endif %}
+</div>
+</div>
+{% endblock %}

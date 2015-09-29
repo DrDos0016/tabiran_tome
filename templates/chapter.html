@@ -1,0 +1,22 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="content">
+{% for chapter in chapters %}
+{% ifchanged %}
+    {% if chapter.key.0 == "c" %}
+    <h1 class="c" style="border-top:2px solid #BAA687;border-bottom: 2px solid #BAA687;">Chapter {{chapter.key|slice:"1:2"}}</h1>
+    {% else %}
+    <h1 class="c" style="border-top:2px solid #BAA687;border-bottom: 2px solid #BAA687;">Supplemental</h1>
+    {% endif %}
+    <div class="spacer"></div>
+{% endifchanged %}
+<a href="/chapter/list/{{chapter.key|lower}}/{{chapter.name|lower|slugify}}"><div class="col chapter-block">
+    <div><img src="/assets/images/chapters/{{chapter.image}}"></div>
+    <div style="width:200px;margin:auto;position:relative;">
+        <div class="text" style="">{{chapter.name}}</div>
+    </div>
+</div></a>
+{% endfor %}
+</div>
+{% endblock %}
