@@ -451,6 +451,7 @@ def team_view(request, team_id=None):
         data["prev"] = max(page - 1, 1)
         data["next"] = page + 1
         data["feed"] = Feed.objects.filter(team_id=team_id).order_by("-id")[(page-1)*fpp:(page-1)*fpp+fpp]
+        data["has_feed"] = True
     return render_to_response("team_view.html", data, context_instance=RequestContext(request))
     
 def test(request):
