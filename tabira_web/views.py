@@ -446,7 +446,11 @@ def team_view(request, team_id=None):
             break
     data["inventory"] = Inventory.objects.filter(team_id=team_id).order_by("item__name")
     if PUBLIC_FEEDS or (request.session.get("admin") or data["yours"]):
-        data["feed"]      = Feed.objects.filter(team_id=team_id).order_by("-id")
+        fpp = 10
+        page = int(request.GET.get("page", 1))
+        data["prev"] = max(page - 1, 1)
+        data["next"] = page + 1
+        data["feed"] = Feed.objects.filter(team_id=team_id).order_by("-id")[(page-1)*fpp:(page-1)*fpp+fpp]
     return render_to_response("team_view.html", data, context_instance=RequestContext(request))
     
 def test(request):

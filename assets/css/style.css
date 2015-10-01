@@ -412,6 +412,7 @@ nav .text
 input, input[type=text], input[type=button], select
 {
     width:12em;
+    font-size:14pt;
     border:1px solid #000;
     padding:1px;
     background:#BAA687;
@@ -445,6 +446,7 @@ input[type=button]
     width:12em;
     margin:auto;
     border:1px solid #000;
+    font-size:14pt;
 }
 
 .type-button:hover
@@ -578,4 +580,29 @@ input[type=radio]
 .feed-post .status
 {
     width:90%;
+}
+
+.finalize
+{
+    width:100%;
+    margin-top:0.25em;
+    padding-bottom:0.25em;
+    border-bottom:2px solid #BAA687;
+}
+
+.finalize > div.col
+{
+    width:15%;
+}
+
+.finalize input
+{
+    max-width:90%;
+    margin:auto;
+    padding:4px;
+}
+
+.finalize input[type=submit]
+{
+    height:33px;
 }

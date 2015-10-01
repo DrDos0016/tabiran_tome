@@ -129,6 +129,7 @@
     {% if feed %}
     <div id="feed" class="col">
     <h2>Feed</h2><br>
+        <div class="list">
         {% for post in feed %}
         <div class="feed-post {{post.type|lower}}">
             <div class="icon col">{{post.user.image_link|safe}}</div>
@@ -138,6 +139,11 @@
             </div>
         </div>
         {% endfor %}
+        </div>
+        <div class="pages" style="margin-top:0.25em;">
+            <a href="?page={{prev}}" class="button-link" style="float:left">Previous Page</a>
+            <a href="?page={{next}}" class="button-link" style="float:right">Next Page</a>
+        </div>
     </div>
     {% endif %}
 </div>

@@ -15,8 +15,8 @@
 {
     width:15%;
     text-align:center;
+    min-height:60px;
 }
-
 
 input
 {
@@ -59,6 +59,11 @@ input[name=earned], input[name=spent], input[name=favor]
     text-align:center;
     font-size:14pt;   
 }
+
+#team-flex #favor .value
+{
+    width:auto;
+}
 </style>
 {% endif %}
 
@@ -94,6 +99,11 @@ input[name=earned], input[name=spent], input[name=favor]
     width:3em;
     text-align:center;
     font-size:14pt;   
+}
+
+input, select
+{
+    font-size:14pt;
 }
 </style>
 {% endif %}
@@ -304,12 +314,12 @@ $(document).ready(function (){
     <form method="POST">
         {% csrf_token %}
         <label for="name">Team Name:</label><br>
-        <input name="name" class="big c" maxlength="100" value="{{team.name}}"><br><br>
+        <input name="name" maxlength="100" value="{{team.name}}"><br><br>
         
         <label for="joined">Date Joined:</label><br>
-        <input name="joined" class="big c" value="{{team.joined|date:'Y-m-d'}}" maxlength="10"><br><br>
+        <input name="joined" value="{{team.joined|date:'Y-m-d'}}" maxlength="10"><br><br>
         
-        <input type="submit" class="big" value="Save Changes">
+        <input type="submit" value="Save Changes">
     </form>
 {% endif %}
 {% if section == "teammates" %}
@@ -372,10 +382,16 @@ $(document).ready(function (){
         </div>
     </div>
     
-    <div class="col">Why are these values changing?</div><div class="col"><input name="why" type="text" value="" maxlength="80" class="l"></div>
-    <input type="submit" class="big" value="Save Changes">
+    <h1>Finalize</h1>
+    <div class="finalize l col">
+        <div class="col" style="width:40%">Why are these values changing?</div>
+        <div class="col" style="width:27%"><input name="why" type="text" value="" maxlength="80" class="l"></div>
+        <div class="col" style="width:25%"><input type="submit" value="Save Changes"></div>
+    </div>
+    
     </form>
     
+    <h1>Help</h1>
     <p class="l">Your Pokémon's status is meant to help others working with your team figure out if a Pokémon who would be around for a current task, as well as 
     allowing for tracking of former teammates who may have appeared in past submissions to still show up in searches for that Pokémon.</p>
     
@@ -411,9 +427,13 @@ $(document).ready(function (){
         <div class="col ranks">{% rank_images "Artisans" team.rep_artisans %}</div>
         <div class="col title" name="title-a">{% rank "Artisans" team.rep_artisans %}</div>
         <br><br>
-        <div class="col">Why are these values changing?</div><div class="col"><input name="why" type="text" value="" maxlength="80" class="l"></div>
-        <br><br>
-        <input type="submit" class="big" value="Save Changes">
+        
+        <h1>Finalize</h1>
+        <div class="finalize l col">
+            <div class="col" style="width:40%">Why are these values changing?</div>
+            <div class="col" style="width:27%"><input name="why" type="text" value="" maxlength="80" class="l"></div>
+            <div class="col" style="width:25%"><input type="submit" value="Save Changes"></div>
+        </div>
     </form>
     </div>
 {% endif %}
@@ -428,9 +448,13 @@ $(document).ready(function (){
         <br>
         <div class="col label">Remaining</div> <div class="col value"><input name="favor" value="{{team.favor}}" maxlength="3" readonly></div>
         <br><br>
-        <div class="col label">Why are these values changing?</div><div class="col value"><input name="why" type="text" value="" maxlength="80"></div>
-        <br><br>
-        <input type="submit" class="big" value="Save Changes">
+        
+        <h1>Finalize</h1>
+        <div class="finalize l col">
+            <div class="col" style="width:40%">Why are these values changing?</div>
+            <div class="col" style="width:27%"><input name="why" type="text" value="" maxlength="80" class="l"></div>
+            <div class="col" style="width:25%"><input type="submit" value="Save Changes"></div>
+        </div>
     </form>
     </div>
 {% endif %}
@@ -510,18 +534,20 @@ $(document).ready(function (){
             <option value="{{item.id}}" data-img="{{item.image}}">{{item.name}}</option>
             {% endfor %}
         </select>
-        <div id="preview" style="float:right">
+        <div id="preview" style="float:right;background:#BAA687;padding:0.5em;border-radius:0.5em;">
         </div>
         <br><br>
         <label for="action">Action:</label><br>
-        <input type="radio" name="action" value="Add" checked> Add to team's inventory<br>
-        <input type="radio" name="action" value="Remove"> Remove from team's inventory<br>
-        <br><br>
-        <label for="why">Why is this item being added/removed? </label><br>
-        <input type="text" name="why" maxlength="80"
+        <label><input type="radio" name="action" value="Add" checked> Add to team's inventory<label><br>
+        <label><input type="radio" name="action" value="Remove"> Remove from team's inventory<label><br>
         <br><br>
         
-        <input type="submit" class="big" value="Save Changes">
+        <h1>Finalize</h1>
+        <div class="finalize l col">
+            <div class="col" style="width:40%">Why are these values changing?</div>
+            <div class="col" style="width:27%"><input name="why" type="text" value="" maxlength="80" class="l"></div>
+            <div class="col" style="width:25%"><input type="submit" value="Save Changes"></div>
+        </div>
         
     </form>
 {% endif %}
@@ -529,7 +555,7 @@ $(document).ready(function (){
     <h1>Edit Team Meta Data</h1>
     <form method="POST" id="meta" class="c">
         {% csrf_token %}
-        <label for="type">Team Type:</label><br>
+        <label for="type">Team Type</label><br>
         <div class="big c icons-div">
             <img class="type-button {% if team.type == 'Drawn' %}selected{% else %}grayscale{% endif %}" src="/assets/images/icons/drawn.png" alt="Drawn" title="Drawn">
             <img class="type-button {% if team.type == 'Written' %}selected{% else %}grayscale{% endif %}" src="/assets/images/icons/written.png" alt="Written" title="Written">
@@ -539,28 +565,29 @@ $(document).ready(function (){
         </div>
         <input name="type" type="hidden" class="big c" value="{{team.type}}" maxlength="12" readonly>
         <br>
-        <label for="cameos">Team Cameos:</label><br>
-        <select name="cameos" class="big">
+        <label for="cameos">Team Cameos</label><br>
+        <select name="cameos">
             <option value="No"{% if team.cameos == "No" %} selected{% endif %}>No cameos</option>
             <option value="Ask"{% if team.cameos == "Ask" %} selected{% endif %}>Ask before cameoing</option>
             <option value="Non-Speaking"{% if team.cameos == "Non-Speaking" %} selected{% endif %}>Non-speaking Only</option>
             <option value="Yes"{% if team.cameos == "Yes" %} selected{% endif %}>Yes please!</option>
         </select>
         <br>
-        <label for="tumblr">Team Tumblr:</label><br>
-        <input name="tumblr" type="text" class="big c" value="{{team.tumblr}}" maxlength="200">
+        <label for="tumblr">Team Tumblr</label><br>
+        <input name="tumblr" type="text" class="l" value="{{team.tumblr}}" maxlength="200">
         <br>
-        <label>Current Authors:</label><br>
+        <label>Current Authors</label><br>
         {% for author in team.authors.all %}
             <a href="http://{{author.username}}.deviantart.com" target="blank">
                 <div class="author-block big"><img src="{{author.icon}}">{{author.username|title}}</div>
             </a>
         {% endfor %}
-        <label for="author">New Author:</label><br>
-        <input name="author" type="text" class="big c" value=""><br>
+        <label for="author">New Author</label><br>
+        <input name="author" type="text" class="l" value=""><br>
         
-        <input type="submit" class="big" value="Save Changes">
+        <input type="submit" value="Save Changes">
         
+        <h1 class="l">Help</h1>
         <p class="l">When adding a new author, the account being added must have logged into the Tabiran Tome website at some point.</p>
         
         <p class="l">Please contact an administrator if you need to remove a user's access from a team.</p>
