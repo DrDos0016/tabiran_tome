@@ -429,6 +429,7 @@ def team_view(request, team_id=None):
     data = {}
     data["reserved_ids"] = RESERVED_IDS
     data["team"] = get_object_or_404(Team, pk=team_id)
+    data["yours"] = False
     for author in data["team"].authors.all():
         if request.session.get("user_id") == author.id:
             data["yours"] = True

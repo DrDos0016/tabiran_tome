@@ -70,13 +70,22 @@
 {% block scripts %}
 <script>
 var pattern = "1234";
+var flash_index = 0;
+function light_on(idx)
+{
+    $("#s"+pattern[idx]).addClass("fading");
+    flash_index += 1;
+}
+
 function flash(pattern)
 {
-    for (var x=0; x < pattern.length; x++)
+    while (flash_index < pattern.length)
     {
-        $("#s"+pattern[x]).addClass("fading");
-        //$("#s"+pattern[x]).removeClass("fading");
+        setTimeout(light_on, 500, flash_index);
+        //light_on(flash_index);
     }
+    
+    alert(flash_index);
 }
 
 $(document).ready(function (){
