@@ -72,14 +72,16 @@ def sign_in(request):
     else:
         url = "https://www.deviantart.com/oauth2/token?client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET+"&grant_type=authorization_code&code="+request.GET["code"]+"&redirect_uri="+uri
         
-        if ENV == "DEV" and False:
+        
+        #if ENV == "DEV" and False:
+        try:
             # Standard
             response = urllib2.urlopen(url)
             data = json.load(response)
             token = data["access_token"]
             response = urllib2.urlopen("https://www.deviantart.com/api/v1/oauth2/user/whoami?access_token="+token)
             data = json.load(response)
-        else:
+        except:
             if ENV == "DEV":
                 print "Forcing external login system. (Yuk!)"
             # Ext script
@@ -196,6 +198,33 @@ def browse(request, method, key=None, slug=None):
         
     # Append logbook info
     return render_to_response("browse.html", data, context_instance=RequestContext(request))
+    
+def stats(request):
+    data = {"title":"Stats"}
+    
+    species = Pokemon.objects.values('species').annotate(species_count=Count('species')).order_by("-species_count", "species")
+    active = Pokemon.objects.filter(status="Active").annotate(active_count=Count('species')).order_by("-active_count", "species")
+    
+    active_dict = {}
+    data["species"] = []
+    
+    for a in active:
+        if active_dict.get(a.species):
+            active_dict[a.species] += 1
+        else:
+            active_dict[a.species] = 1
+            
+    for s in species:
+        print s
+        data["species"].append({"name":NUM_TO_NAME[s["species"]], "count":s["species_count"], "active":active_dict.get(s["species"], 0), "dex":s["species"]})
+        
+    if request.GET.get("sort") == "species":
+        data["species"] = sorted(data["species"], key=lambda k: (k["name"].lower()))
+    elif request.GET.get("sort") == "active":
+        data["species"] = sorted(data["species"], key=lambda k: (-1 * k["active"], k["name"].lower()))
+    else:
+        data["species"] = sorted(data["species"], key=lambda k: (-1 * k["count"], k["name"].lower()))
+    return render_to_response("stats.html", data, context_instance=RequestContext(request))
     
 def team_edit(request, team_id, section):
     data = {"title":"Edit Team - " + section.title()}

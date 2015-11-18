@@ -36,6 +36,10 @@ urlpatterns = [
     url(r'^chapter$', 'tabira_web.views.chapter'),
     url(r'^chapter/list/(?P<key>[a-z0-9]+)/(?P<slug>.*)$', 'tabira_web.views.browse', {"method":"chapter"}),
     
+    # Misc functions
+    url(r'^misc$', 'tabira_web.views.generic', {"title":"Misc", "template":"misc.html"}),
+    url(r'^stats$', 'tabira_web.views.stats'),
+    
     # Team functions
     url(r'^team$', 'tabira_web.views.browse', {"method":"team"}),
     url(r'^team/edit/(?P<team_id>[-0-9]+)/(.*)/(?P<section>[a-z]+)$', 'tabira_web.views.team_edit'),
@@ -45,7 +49,7 @@ urlpatterns = [
     url(r'^sign-in$', 'tabira_web.views.sign_in'),
     url(r'^sign-out$', 'tabira_web.views.sign_out'),
     
-    # Misc functions
+    # Debugging functions
     url(r'^error$', 'tabira_web.views.error'),
     url(r'^error/(?P<test>.*)$', 'tabira_web.views.error'),
     url(r'^test$', 'tabira_web.views.test'),
