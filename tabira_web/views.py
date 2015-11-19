@@ -256,6 +256,7 @@ def team_edit(request, team_id, section):
         data["items"] = Item.objects.all().order_by("name")
     
     if request.POST:
+        changes = ""
         if section == "team":
             changes = ""
             if team.name != request.POST.get("name"):
