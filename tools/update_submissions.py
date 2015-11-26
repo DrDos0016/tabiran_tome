@@ -11,6 +11,10 @@ from datetime import datetime
 from tabira.private_settings import CLIENT_ID, CLIENT_SECRET
 
 USERNAME = "talesoftabira"
+if "debug" in sys.argv:
+    debug = True
+else:
+    debug = False
 
 def main():
     token = Token.objects.get(pk=1)
@@ -29,7 +33,7 @@ def main():
                 if created:
                     g.parent    = result.get("parent", "")
                     g.name      = result["name"]
-                    g.monitor   = 0
+                    g.monitor   = 1
                     g.save()
         
         if not galleries.get("has_more"):
@@ -65,10 +69,10 @@ def main():
                             print e.message_dict
                     else:
                         #print "    [X] " + deviation["title"]
-                        running = False
-                        break
+                        if "force" not in sys.argv:
+                            running = False
             
-            if results.get("has_more") and running  :
+            if results.get("has_more") and running:
                 offset = results["next_offset"]
             else:
                 break
