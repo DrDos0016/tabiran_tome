@@ -6,6 +6,8 @@
 {% ifchanged %}
     {% if chapter.key.0 == "c" %}
     <h1 class="c" style="border-top:2px solid #BAA687;border-bottom: 2px solid #BAA687;">Chapter {{chapter.key|slice:"1:2"}}</h1>
+    {% elif chapter.key.0 == "i" and chapter.key != "inv" %}
+    <h1 class="c" style="border-top:2px solid #BAA687;border-bottom: 2px solid #BAA687;">Intermission {{chapter.key|slice:"1:2"}}</h1>
     {% else %}
     <h1 class="c" style="border-top:2px solid #BAA687;border-bottom: 2px solid #BAA687;">Supplemental</h1>
     {% endif %}
