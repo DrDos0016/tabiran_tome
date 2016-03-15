@@ -302,44 +302,44 @@ def reputation(request, filter=None):
         if filter == "t-u":
             data["teams"] = Team.objects.filter(rep_trackers=0).order_by("-rep_trackers", "name")
         elif filter == "t-0":
-            data["teams"] = Team.objects.filter(rep_trackers__lt=7).order_by("-rep_trackers", "name")
+            data["teams"] = Team.objects.filter(rep_trackers__gte=1, rep_trackers__lt=7).order_by("-rep_trackers", "name")
         elif filter == "t-1":
-            data["teams"] = Team.objects.filter(rep_trackers__lt=15).order_by("-rep_trackers", "name")
+            data["teams"] = Team.objects.filter(rep_trackers__gte=7, rep_trackers__lt=15).order_by("-rep_trackers", "name")
         elif filter == "t-2":
-            data["teams"] = Team.objects.filter(rep_trackers__lt=24).order_by("-rep_trackers", "name")
+            data["teams"] = Team.objects.filter(rep_trackers__gte=15, rep_trackers__lt=24).order_by("-rep_trackers", "name")
         elif filter == "t-3":
             data["teams"] = Team.objects.filter(rep_trackers__gte=24).order_by("-rep_trackers", "name")
             
         elif filter == "a-u":
             data["teams"] = Team.objects.filter(rep_artisans=0).order_by("-rep_artisans", "name")
         elif filter == "a-0":
-            data["teams"] = Team.objects.filter(rep_artisans__lt=7).order_by("-rep_artisans", "name")
+            data["teams"] = Team.objects.filter(rep_artisans__gte=1, rep_artisans__lt=7).order_by("-rep_artisans", "name")
         elif filter == "a-1":
-            data["teams"] = Team.objects.filter(rep_artisans__lt=15).order_by("-rep_artisans", "name")
+            data["teams"] = Team.objects.filter(rep_artisans__gte=7, rep_artisans__lt=15).order_by("-rep_artisans", "name")
         elif filter == "a-2":
-            data["teams"] = Team.objects.filter(rep_artisans__lt=24).order_by("-rep_artisans", "name")
+            data["teams"] = Team.objects.filter(rep_artisans__gte=15, rep_artisans__lt=24).order_by("-rep_artisans", "name")
         elif filter == "a-3":
             data["teams"] = Team.objects.filter(rep_artisans__gte=24).order_by("-rep_artisans", "name")
             
         elif filter == "s-u":
             data["teams"] = Team.objects.filter(rep_scholars=0).order_by("-rep_scholars", "name")
         elif filter == "s-0":
-            data["teams"] = Team.objects.filter(rep_scholars__lt=7).order_by("-rep_scholars", "name")
+            data["teams"] = Team.objects.filter(rep_scholars__gte=1, rep_scholars__lt=7).order_by("-rep_scholars", "name")
         elif filter == "s-1":
-            data["teams"] = Team.objects.filter(rep_scholars__lt=15).order_by("-rep_scholars", "name")
+            data["teams"] = Team.objects.filter(rep_scholars__gte=7, rep_scholars__lt=15).order_by("-rep_scholars", "name")
         elif filter == "s-2":
-            data["teams"] = Team.objects.filter(rep_scholars__lt=24).order_by("-rep_scholars", "name")
+            data["teams"] = Team.objects.filter(rep_scholars__gte=15, rep_scholars__lt=24).order_by("-rep_scholars", "name")
         elif filter == "s-3":
             data["teams"] = Team.objects.filter(rep_scholars__gte=24).order_by("-rep_scholars", "name")
             
         elif filter == "k-u":
             data["teams"] = Team.objects.filter(rep_keepers=0).order_by("-rep_keepers", "name")
         elif filter == "k-0":
-            data["teams"] = Team.objects.filter(rep_keepers__lt=7).order_by("-rep_keepers", "name")
+            data["teams"] = Team.objects.filter(rep_keepers__gte=1, rep_keepers__lt=7).order_by("-rep_keepers", "name")
         elif filter == "k-1":
-            data["teams"] = Team.objects.filter(rep_keepers__lt=15).order_by("-rep_keepers", "name")
+            data["teams"] = Team.objects.filter(rep_keepers__gte=7, rep_keepers__lt=15).order_by("-rep_keepers", "name")
         elif filter == "k-2":
-            data["teams"] = Team.objects.filter(rep_keepers__lt=24).order_by("-rep_keepers", "name")
+            data["teams"] = Team.objects.filter(rep_keepers__gte=15, rep_keepers__lt=24).order_by("-rep_keepers", "name")
         elif filter == "k-3":
             data["teams"] = Team.objects.filter(rep_keepers__gte=24).order_by("-rep_keepers", "name")
     
