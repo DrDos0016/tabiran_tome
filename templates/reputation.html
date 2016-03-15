@@ -1,0 +1,175 @@
+{% extends "main.html" %}
+
+{% block css %}
+<style>
+#right .outline-block
+{
+    width:100px;
+    min-width:100px;
+}
+
+#right .outline-block.selected
+{
+    background:#BAA687;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+<h1>STATS</h1>
+
+<div class="col" style="width:100%;text-align:center">
+    <a href="/stats/reputation/k-u"><div class="outline-block col{% if filter == 'k-u' %} selected{%  endif %}">
+        <img name="k-u" src="/assets/images/badges/keepers-1.png" style="visibility:hidden"><br>
+        Unaffiliated<br>
+        <b>{{ku}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/k-0"><div class="outline-block col{% if filter == 'k-0' %} selected{%  endif %}">
+        <img name="k-0" src="/assets/images/badges/keepers-1.png" class="darkened"><br>
+        Initiates<br>
+        <b>{{k0}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/k-1"><div class="outline-block col{% if filter == 'k-1' %} selected{%  endif %}">
+        <img name="k-1" src="/assets/images/badges/keepers-1.png"><br>
+        Preservers<br>
+        <b>{{k1}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/k-2"><div class="outline-block col{% if filter == 'k-2' %} selected{%  endif %}">
+        <img name="k-2" src="/assets/images/badges/keepers-2.png"><br>
+        Wardens<br>
+        <b>{{k2}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/k-3"><div class="outline-block col{% if filter == 'k-3' %} selected{%  endif %}">
+        <img name="k-3" src="/assets/images/badges/keepers-3.png"><br>
+        Guardians<br>
+        <b>{{k3}}</b>
+    </div></a>
+    
+    <br>
+    
+    <a href="/stats/reputation/t-u"><div class="outline-block col{% if filter == 't-u' %} selected{%  endif %}">
+        <img name="t-u" src="/assets/images/badges/trackers-1.png" style="visibility:hidden"><br>
+        Unafilliated<br>
+        <b>{{tu}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/t-0"><div class="outline-block col{% if filter == 't-0' %} selected{%  endif %}">
+        <img name="t-0" src="/assets/images/badges/trackers-1.png" class="darkened"><br>
+        Initiates<br>
+        <b>{{t0}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/t-1"><div class="outline-block col{% if filter == 't-1' %} selected{%  endif %}">
+        <img name="t-1" src="/assets/images/badges/trackers-1.png"><br>
+        Scouts<br>
+        <b>{{t1}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/t-2"><div class="outline-block col{% if filter == 't-2' %} selected{%  endif %}">
+        <img name="t-2" src="/assets/images/badges/trackers-2.png"><br>
+        Explorers<br>
+        <b>{{t2}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/t-3"><div class="outline-block col{% if filter == 't-3' %} selected{%  endif %}">
+        <img name="t-3" src="/assets/images/badges/trackers-3.png"><br>
+        Adventurers<br>
+        <b>{{t3}}</b>
+    </div></a>
+    
+    <br>
+    
+    <a href="/stats/reputation/s-u"><div class="outline-block col{% if filter == 's-u' %} selected{%  endif %}">
+        <img name="s-u" src="/assets/images/badges/scholars-1.png" style="visibility:hidden"><br>
+        Unafilliated<br>
+        <b>{{su}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/s-0"><div class="outline-block col{% if filter == 's-0' %} selected{%  endif %}">
+        <img name="s-0" src="/assets/images/badges/scholars-1.png" class="darkened"><br>
+        Initiates<br>
+        <b>{{s0}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/s-1"><div class="outline-block col{% if filter == 's-1' %} selected{%  endif %}">
+        <img name="s-1" src="/assets/images/badges/scholars-1.png"><br>
+        Protégé<br>
+        <b>{{s1}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/s-2"><div class="outline-block col{% if filter == 's-2' %} selected{%  endif %}">
+        <img name="s-2" src="/assets/images/badges/scholars-2.png"><br>
+        Lectors<br>
+        <b>{{s2}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/s-3"><div class="outline-block col{% if filter == 's-3' %} selected{%  endif %}">
+        <img name="s-3" src="/assets/images/badges/scholars-3.png"><br>
+        Professors<br>
+        <b>{{s3}}</b>
+    </div></a>
+    
+    <br>
+    
+    <a href="/stats/reputation/a-u"><div class="outline-block col{% if filter == 'a-u' %} selected{%  endif %}">
+        <img name="a-u" src="/assets/images/badges/artisans-1.png" style="visibility:hidden"><br>
+        Unafilliated<br>
+        <b>{{au}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/a-0"><div class="outline-block col{% if filter == 'a-0' %} selected{%  endif %}">
+        <img name="a-0" src="/assets/images/badges/artisans-1.png" class="darkened"><br>
+        Initiates<br>
+        <b>{{a0}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/a-1"><div class="outline-block col{% if filter == 'a-1' %} selected{%  endif %}">
+        <img name="a-1" src="/assets/images/badges/artisans-1.png"><br>
+        Apprentinces<br>
+        <b>{{a1}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/a-2"><div class="outline-block col{% if filter == 'a-2' %} selected{%  endif %}">
+        <img name="a-2" src="/assets/images/badges/artisans-2.png"><br>
+        Adepts<br>
+        <b>{{a2}}</b>
+    </div></a>
+    
+    <a href="/stats/reputation/a-3"><div class="outline-block col{% if filter == 'a-3' %} selected{%  endif %}">
+        <img name="a-3" src="/assets/images/badges/artisans-3.png"><br>
+        Virtuosos<br>
+        <b>{{a3}}</b>
+    </div></a>
+</div>
+
+<br><br>
+
+{% for team in teams %}
+<div class="team-overview">
+    <div class="teammates">
+        {% for pokemon in team.teammates.all %}
+            {% if pokemon.status == "Active" %}
+                {{pokemon.bubble|safe}}
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="team-name big">
+        <a href="/team/view/{{team.id}}/{{team.name|slugify}}">{{team.name}}</a>
+    </div>
+    
+    <div class="team-meta">
+        <img class="team-type" src="/assets/images/icons/{{team.type|lower}}.png">
+        {% for author in team.authors.all %}
+        <a href="http://{{author.username}}.deviantart.com" target="_blank"><img class="team-authors" src="{{author.icon}}"></a>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+</div>
+{% endblock %}

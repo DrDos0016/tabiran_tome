@@ -38,7 +38,9 @@ urlpatterns = [
     
     # Misc functions
     url(r'^misc$', 'tabira_web.views.generic', {"title":"Misc", "template":"misc.html"}),
-    url(r'^stats$', 'tabira_web.views.stats'),
+    url(r'^stats/population$', 'tabira_web.views.population'),
+    url(r'^stats/reputation/(?P<filter>.*)$', 'tabira_web.views.reputation'),
+    url(r'^stats/reputation$', 'tabira_web.views.reputation'),
     
     # Team functions
     url(r'^team$', 'tabira_web.views.browse', {"method":"team"}),

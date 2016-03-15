@@ -1,3 +1,4 @@
+UNUSED
 {% extends "main.html" %}
 {% load pokemon_lists %}
 
@@ -85,6 +86,9 @@ $(document).ready(function (){
             <option value="Written"{% if request.GET.type == 'Written' %} selected{% endif %}>Written</option>
             <option value="Hybrid"{% if request.GET.type == 'Hybrid' %} selected{% endif %}>Hybrid</option>
         </select>
+    </div>
+    <div>
+        <label>Team Reputation</label><br>
     </div>
     <div>
         <label for="sort">Sort Results</label><br>

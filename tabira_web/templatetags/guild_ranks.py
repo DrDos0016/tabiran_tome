@@ -15,7 +15,7 @@ def rank(guild, value):
             return "Initiate"
         elif value < 15:
             return "Preserver"
-        elif value < 99: # TODO: This rank's cutoff is not yet defined
+        elif value < 24:
             return "Warden"
         else:
             return "Guardian"
@@ -26,7 +26,7 @@ def rank(guild, value):
             return "Initiate"
         elif value < 15:
             return "Scout"
-        elif value < 99: # TODO: This rank's cutoff is not yet defined
+        elif value < 24:
             return "Explorer"
         else:
             return "Adventurer"
@@ -37,7 +37,7 @@ def rank(guild, value):
             return "Initiate"
         elif value < 15:
             return "Protégé"
-        elif value < 99: # TODO: This rank's cutoff is not yet defined
+        elif value < 24:
             return "Lector"
         else:
             return "Professor"
@@ -48,7 +48,7 @@ def rank(guild, value):
             return "Initiate"
         elif value < 15:
             return "Apprentince"
-        elif value < 99: # TODO: This rank's cutoff is not yet defined
+        elif value < 24:
             return "Adept"
         else:
             return "Virtuoso"
@@ -62,7 +62,7 @@ def rank_images(guild, value):
         level = 0
     elif value < 15:
         level = 1
-    elif value < 99:  # TODO: This rank's cutoff is not yet defined
+    elif value < 24:
         level = 2
     else:
         level = 3

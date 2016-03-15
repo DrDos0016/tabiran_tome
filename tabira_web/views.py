@@ -199,8 +199,8 @@ def browse(request, method, key=None, slug=None):
     # Append logbook info
     return render_to_response("browse.html", data, context_instance=RequestContext(request))
     
-def stats(request):
-    data = {"title":"Stats"}
+def population(request):
+    data = {"title":"Stats - Population"}
     
     species = Pokemon.objects.values('species').annotate(species_count=Count('species')).order_by("-species_count", "species")
     active = Pokemon.objects.filter(status="Active").annotate(active_count=Count('species')).order_by("-active_count", "species")
@@ -224,8 +224,127 @@ def stats(request):
         data["species"] = sorted(data["species"], key=lambda k: (-1 * k["active"], k["name"].lower()))
     else:
         data["species"] = sorted(data["species"], key=lambda k: (-1 * k["count"], k["name"].lower()))
-    return render_to_response("stats.html", data, context_instance=RequestContext(request))
+    return render_to_response("population.html", data, context_instance=RequestContext(request))
+
+def reputation(request, filter=None):
+    data = {
+        "title":"Stats - Repution",
+        "tu":0,
+        "t0":0,
+        "t1":0,
+        "t2":0,
+        "t3":0,
+        "au":0,
+        "a0":0,
+        "a1":0,
+        "a2":0,
+        "a3":0,
+        "su":0,
+        "s0":0,
+        "s1":0,
+        "s2":0,
+        "s3":0,
+        "ku":0,
+        "k0":0,
+        "k1":0,
+        "k2":0,
+        "k3":0,
+        "filter":filter
+        }
     
+    teams = Team.objects.all()
+    for team in teams:
+        if team.rep_keepers == 0:
+            data["ku"] += 1
+        elif team.rep_keepers < 7:
+            data["k0"] += 1
+        elif team.rep_keepers < 15:
+            data["k1"] += 1
+        elif team.rep_keepers < 24:
+            data["k2"] += 1
+        else:
+            data["k3"] += 1
+            
+        if team.rep_artisans == 0:
+            data["au"] += 1
+        elif team.rep_artisans < 7:
+            data["a0"] += 1
+        elif team.rep_artisans < 15:
+            data["a1"] += 1
+        elif team.rep_artisans < 24:
+            data["a2"] += 1
+        else:
+            data["a3"] += 1
+            
+        if team.rep_scholars == 0:
+            data["su"] += 1
+        elif team.rep_scholars < 7:
+            data["s0"] += 1
+        elif team.rep_scholars < 15:
+            data["s1"] += 1
+        elif team.rep_scholars < 24:
+            data["s2"] += 1
+        else:
+            data["s3"] += 1
+            
+        if team.rep_trackers == 0:
+            data["tu"] += 1
+        elif team.rep_trackers < 7:
+            data["t0"] += 1
+        elif team.rep_trackers < 15:
+            data["t1"] += 1
+        elif team.rep_trackers < 24:
+            data["t2"] += 1
+        else:
+            data["t3"] += 1
+               
+    if filter:
+        if filter == "t-u":
+            data["teams"] = Team.objects.filter(rep_trackers=0).order_by("-rep_trackers", "name")
+        elif filter == "t-0":
+            data["teams"] = Team.objects.filter(rep_trackers__lt=7).order_by("-rep_trackers", "name")
+        elif filter == "t-1":
+            data["teams"] = Team.objects.filter(rep_trackers__lt=15).order_by("-rep_trackers", "name")
+        elif filter == "t-2":
+            data["teams"] = Team.objects.filter(rep_trackers__lt=24).order_by("-rep_trackers", "name")
+        elif filter == "t-3":
+            data["teams"] = Team.objects.filter(rep_trackers__gte=24).order_by("-rep_trackers", "name")
+            
+        elif filter == "a-u":
+            data["teams"] = Team.objects.filter(rep_artisans=0).order_by("-rep_artisans", "name")
+        elif filter == "a-0":
+            data["teams"] = Team.objects.filter(rep_artisans__lt=7).order_by("-rep_artisans", "name")
+        elif filter == "a-1":
+            data["teams"] = Team.objects.filter(rep_artisans__lt=15).order_by("-rep_artisans", "name")
+        elif filter == "a-2":
+            data["teams"] = Team.objects.filter(rep_artisans__lt=24).order_by("-rep_artisans", "name")
+        elif filter == "a-3":
+            data["teams"] = Team.objects.filter(rep_artisans__gte=24).order_by("-rep_artisans", "name")
+            
+        elif filter == "s-u":
+            data["teams"] = Team.objects.filter(rep_scholars=0).order_by("-rep_scholars", "name")
+        elif filter == "s-0":
+            data["teams"] = Team.objects.filter(rep_scholars__lt=7).order_by("-rep_scholars", "name")
+        elif filter == "s-1":
+            data["teams"] = Team.objects.filter(rep_scholars__lt=15).order_by("-rep_scholars", "name")
+        elif filter == "s-2":
+            data["teams"] = Team.objects.filter(rep_scholars__lt=24).order_by("-rep_scholars", "name")
+        elif filter == "s-3":
+            data["teams"] = Team.objects.filter(rep_scholars__gte=24).order_by("-rep_scholars", "name")
+            
+        elif filter == "k-u":
+            data["teams"] = Team.objects.filter(rep_keepers=0).order_by("-rep_keepers", "name")
+        elif filter == "k-0":
+            data["teams"] = Team.objects.filter(rep_keepers__lt=7).order_by("-rep_keepers", "name")
+        elif filter == "k-1":
+            data["teams"] = Team.objects.filter(rep_keepers__lt=15).order_by("-rep_keepers", "name")
+        elif filter == "k-2":
+            data["teams"] = Team.objects.filter(rep_keepers__lt=24).order_by("-rep_keepers", "name")
+        elif filter == "k-3":
+            data["teams"] = Team.objects.filter(rep_keepers__gte=24).order_by("-rep_keepers", "name")
+    
+    return render_to_response("reputation.html", data, context_instance=RequestContext(request))
+
 def team_edit(request, team_id, section):
     data = {"title":"Edit Team - " + section.title()}
     data["section"] = section
