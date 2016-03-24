@@ -51,7 +51,7 @@
     {% for poke in pokemon %}
         <tr>
             <td>{{poke.bubble|safe}}</td>
-            <td class="name">{{poke.name}}</td>
+            <td class="name"><span class="teammate-name">{{poke.name}}</span></td>
             <td class="id">{{poke.id}}</td>
             <td class="check"><input name="delete" type="checkbox" value="{{poke.id}}"></td>
         </tr>

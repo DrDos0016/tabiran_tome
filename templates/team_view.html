@@ -28,7 +28,7 @@
         {% for poke in pokemon %}
         <div class="teammate{% if poke.status|lower != 'active' %} grayscale{% endif %}">
             {{poke.bubble|safe}}
-            <div class="col">{{poke.name}}<br>{{poke.species_name}}</div>
+            <div class="col"><span class="teammate-name">{{poke.name}}</span><br>{{poke.species_name}}</div>
             <div class="col" style="float:right;text-align:right;margin-right:0.5em;">{{poke.gender}}<br>{{poke.status}}</div>
         </div>
         {% endfor %}

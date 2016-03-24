@@ -606,3 +606,8 @@ input[type=radio]
 {
     height:33px;
 }
+
+.teammate-name
+{
+    font-weight:bold;
+}
