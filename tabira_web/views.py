@@ -49,10 +49,19 @@ def index(request): # Index/Manage Teams
                 team.full_clean()
                 team.save()
                 team.authors.add(request.session["user_id"])
+                
+                # Give them a Meowth doll
+                try:
+                    inventory = Inventory(item_id=18, team_id=team.id)
+                    inventory.save()
+                    feed_post("INVENTORY", "Added " + inventory.item.name + " to the team's inventory. Reasoning: A thank you gift for registering on the Tabiran Tome!" , request.session.get("user_id"), team.id)
+                except:
+                    None # The item doesn't exist
+                
                 return redirect("/team/view/"+str(team.id)+"/"+slugify(team.name))
             except ValidationError as e:
                 return error(request, errors=e.message_dict) 
-                
+            
         data["teams"] = Team.objects.filter(authors=request.session.get("user_id")).prefetch_related("authors", "teammates").order_by("name")
     else:
         data["welcome"] = True
