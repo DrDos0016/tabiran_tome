@@ -93,6 +93,14 @@ $(document).ready(function (){
     </div>
     <div class="spacer"></div>
     
+    <div class="col">
+        <label for="order">Order</label> <input name="order" value="{{wip.order|default:999}}"><br>
+    </div>
+    <div class="col">
+        This value is used for sorting events, larger numbered events appear first on the chapter listing. It is best to use the value of the latest event and add one to it.
+    </div>
+    <div class="spacer"></div>
+    
     {% comment %}
     <div class="col">
         <label for="folder">DA Folder</label>

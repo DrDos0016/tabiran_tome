@@ -92,6 +92,7 @@ def manage_events(request):
         event.name = request.POST["name"]
         event.active = int(request.POST.get("active", 0))
         event.timestamp = int(request.POST.get("timestamp", 0))
+        event.order = int(request.POST.get("order", 999))
         #event.folder_id = request.POST.get("folder")
         
         # DL the image
