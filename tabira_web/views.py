@@ -74,7 +74,7 @@ def sign_in(request):
     if ENV == "DEV":
         uri = "http://django.pi:8000/sign-in"
     else:
-        uri = "http://tome.talesoftabira.com/sign-in"
+        uri = "https://tome.talesoftabira.com/sign-in"
         
     if not request.GET.get("code"):
         return redirect("https://www.deviantart.com/oauth2/authorize?response_type=code&client_id="+CLIENT_ID+"&redirect_uri="+uri)
