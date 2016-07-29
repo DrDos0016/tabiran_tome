@@ -357,10 +357,11 @@ def reputation(request, filter=None):
 def team_edit(request, team_id, section):
     data = {"title":"Edit Team - " + section.title()}
     data["section"] = section
+    data["reserved_ids"] = RESERVED_IDS
     team = get_object_or_404(Team, pk=team_id)
     
     if section == "chapters":
-        data["submissions"] = Logbook.objects.filter(team_id=team_id) # Events you already submitted
+        data["submissions"] = Logbook.objects.filter(team_id=team_id).order_by("-order", "-id") # Events you already submitted
         
         if not data["submissions"]: # Force the first logbook to be your app
             data["events"] = Event.objects.filter(pk=APP_EVENT_ID)
@@ -504,7 +505,7 @@ def team_edit(request, team_id, section):
                 return error(request, errors=e.message_dict)
        
         if section == "chapters":
-            if "Save" in request.POST.get("method", ""):
+            if "Save Chapter" == request.POST.get("method", ""):
                 # New or Existing
                 if request.POST.get("submission") == "NEW":
                     logbook = Logbook(event_id = request.POST.get("event_id"))
@@ -513,8 +514,6 @@ def team_edit(request, team_id, section):
                     logbook = Logbook.objects.get(pk=request.POST.get("submission"))
                     changes = "Edited chapter for event #" + str(logbook.event_id)
                     
-                # TODO: Logbook ordering
-                #logbook.order = 
                 logbook.custom_name = request.POST.get("custom_name", "")
                 logbook.event_id        = request.POST.get("event_id")
                 logbook.deviation_id    = request.POST.get("deviation_id")
@@ -526,7 +525,7 @@ def team_edit(request, team_id, section):
                     return redirect("/team/view/"+str(team.id)+"/"+slugify(team.name.lower()))
                 except ValidationError as e:
                     return error(request, errors=e.message_dict)
-            else: # Delete
+            elif "DELETE Chapter" == request.POST.get("method", ""): # Delete
                 try:
                     logbook = Logbook.objects.get(pk=request.POST.get("submission"))
                     team.logbooks.remove(logbook)
@@ -534,6 +533,17 @@ def team_edit(request, team_id, section):
                     return redirect("/team/view/"+str(team.id)+"/"+slugify(team.name.lower()))
                 except ValidationError as e:
                     return error(request, errors=e.message_dict)
+            elif "Save Order" == request.POST.get("method", ""): # Rearrange
+                try:
+                    ids = list(reversed(request.POST.getlist("logbook_id")))
+                    for submission in data["submissions"]:
+                        if submission.event.id not in RESERVED_IDS:
+                            new_order = ids.index(str(submission.id))
+                            submission.order = new_order
+                            submission.save()
+                    return redirect("/team/view/"+str(team.id)+"/"+slugify(team.name.lower()))
+                except ValidationError as e:
+                    return error(request, errors=e.message_dict)    
        
         if section == "inventory":
             if request.POST.get("action") == "Add":
@@ -594,7 +604,7 @@ def team_view(request, team_id=None):
     
     data["title"] = "["+str(data["team"].id)+"] " + data["team"].name
     data["pokemon"] = Pokemon.objects.filter(team_id=team_id)
-    data["logbooks"] = Logbook.objects.filter(team_id=team_id)
+    data["logbooks"] = Logbook.objects.filter(team_id=team_id).order_by("-order", "-id")
     for logbook in data["logbooks"]:
         if logbook.event.id == APP_EVENT_ID:
             data["app"] = logbook

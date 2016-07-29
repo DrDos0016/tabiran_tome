@@ -4,14 +4,22 @@
 </Directory>
 
 WSGIPythonPath /var/projects/tales_of_tabira:/var/projects/tales_of_tabira/virt/lib/python2.7/site-packages
+
 <VirtualHost *:80>
+    ServerName tome.talesoftabira.com
+    Redirect / https://tome.talesoftabira.com/
+</VirtualHost>
+
+<VirtualHost *:443>
     # Make sure apache has access to /var/www/.python-eggs
     Alias /assets/ /var/projects/tales_of_tabira/assets/
+    Alias /.well-known/ /var/projects/tales_of_tabira/assets/.well-known/
     WSGIDaemonProcess site51 python-path=/var/projects/tales_of_tabira:/var/projects/tales_of_tabira/virt/lib/python2.7/site-packages
     WSGIProcessGroup site51
     WSGIScriptAlias / /var/projects/tales_of_tabira/tabira/wsgi.py
     ServerAdmin doctordos@gmail.com
-    ServerName tome.pokyfriends.com
+    ServerName tome.talesoftabira.com
+    ServerAlias tome.pokyfriends.com
     ServerAlias tome.pi
 
     <Directory /var/projects/tales_of_tabira/tabira>
@@ -28,4 +36,23 @@ WSGIPythonPath /var/projects/tales_of_tabira:/var/projects/tales_of_tabira/virt/
     RewriteEngine on
     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
     RewriteRule ^(.*)$ http://%1%{REQUEST_URI} [R=301,QSA,NC,L]
+
+    SSLEngine on
+    SSLCertificateFile    /etc/letsencrypt/live/tome.talesoftabira.com/cert.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/tome.talesoftabira.com/privkey.pem
+
+    <FilesMatch "\.(cgi|shtml|phtml|php)$">
+        SSLOptions +StdEnvVars
+    </FilesMatch>
+    <Directory /usr/lib/cgi-bin>
+        SSLOptions +StdEnvVars
+    </Directory>
+
+    BrowserMatch "MSIE [2-6]" \
+        nokeepalive ssl-unclean-shutdown \
+        downgrade-1.0 force-response-1.0
+    # MSIE 7 and newer should be able to use keepalive
+    BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+
+
 </VirtualHost>

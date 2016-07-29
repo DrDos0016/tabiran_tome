@@ -49,7 +49,7 @@
 #simon-grid .col.fading
 {
     animation-name: brightness;
-    animation-duration: 0.5s;
+    animation-duration: 0.75s;
     animation-delay: 0s;
     animation-iteration-count: 1;
     animation-timing-function: linear;
@@ -70,27 +70,71 @@
 {% block scripts %}
 <script>
 var pattern = "1234";
-var flash_index = 0;
+var input = "";
+var flash_idx = 0;
+var delay = 1000;
+var timer = null;
+var mode = "wait";
+
 function light_on(idx)
 {
-    $("#s"+pattern[idx]).addClass("fading");
-    flash_index += 1;
+    console.log("Lighting IDX", idx);
+    $(".fading").removeClass("fading");
+    $("#s"+idx).addClass("fading");
 }
 
-function flash(pattern)
+function flash()
 {
-    while (flash_index < pattern.length)
+    
+    if (flash_idx < 0)
     {
-        setTimeout(light_on, 500, flash_index);
-        //light_on(flash_index);
+        //console.log("PAUSED");
+        return true;
     }
     
-    alert(flash_index);
+    if (! timer)
+    {
+        console.log("Setting timer");
+        timer = window.setInterval(flash, delay);
+        return true;
+    }
+    
+    console.log("FLASH!");
+    
+    if (flash_idx >= pattern.length)
+    {
+        console.log("Pattern over");
+        // Kill the flashing, its time for player input
+        window.clearInterval(timer);
+        timer = null;
+        flash_idx = 0;
+        mode = "input";
+        return true;
+    }
+        
+    light_on(pattern[flash_idx]);
+    flash_idx++;
+}
+
+function clicked(num)
+{
+    if (mode != "input")
+        return false;
+        
+    console.log("Clicked", num);
+    console.log("Versus", pattern[input.length]);
+    $("#s"+num).removeClass("fading");
+    light_on(num);
 }
 
 $(document).ready(function (){
     $("#play").click(function (){
-        flash(pattern);
+        flash();
+        //$(this).prop("disabled", true);
+    });
+    
+    $(".button").click(function (){
+        clicked($(this).data("num"));
     });
 });
 </script>
@@ -101,9 +145,9 @@ $(document).ready(function (){
 <h1>Simon</h1>
 
 <div id="simon-grid">
-    <div class="col" id="s1"><img src="/assets/images/badges/keepers-3.png"></div><div class="col" id="s2"><img src="/assets/images/badges/trackers-3.png"></div>
+    <div class="col button" id="s1" data-num="1"><img src="/assets/images/badges/keepers-3.png"></div><div class="col button" id="s2" data-num="2"><img src="/assets/images/badges/trackers-3.png"></div>
     <br>
-    <div class="col" id="s3"><img src="/assets/images/badges/artisans-3.png"></div><div class="col" id="s4"><img src="/assets/images/badges/scholars-3.png"></div>
+    <div class="col button" id="s3" data-num="3"><img src="/assets/images/badges/artisans-3.png"></div><div class="col button" id="s4" data-num="4"><img src="/assets/images/badges/scholars-3.png"></div>
 </div>
 
 <div style="width:100%;margin-top:1em;" class="c">

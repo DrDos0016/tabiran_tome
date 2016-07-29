@@ -220,6 +220,7 @@ function render_favor()
 </script>
 {% endif %}
 {% if section == "chapters" %}
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script>
 function preview(da_url)
 {
@@ -264,7 +265,17 @@ $(document).ready(function (){
         }
     });
     
-    preview($("select[name=deviation_id]").find("option:selected").data("da_url"));
+    //preview($("select[name=deviation_id]").find("option:selected").data("da_url"));
+    $(".sortable").sortable({
+        cursor: "grabbing",
+        start: function( event, ui ) {
+            ui.item.css("opacity", "0.8");
+        },
+        stop: function( event, ui ) {
+            ui.item.css("opacity", "1");
+        }
+    });
+    $(".sortable").disableSelection();
 });
 </script>
 {% endif %}
@@ -520,8 +531,30 @@ $(document).ready(function (){
         
         <div id="preview">
         </div>
-        
     </form>
+    
+    {% if submissions %}
+    <h1>Rearrange Chapters</h1>
+    <p>Drag and drop to rearrange the order your chapters will appear</p>
+    <form method="POST" id="arrange-chapters">
+        {% csrf_token %}
+        <div class="sortable">
+        {% for logbook in submissions %}
+        {% if logbook.event.id not in reserved_ids %}
+            <div class="logbook grabbable">
+                <input type="hidden" name="logbook_id" value="{{logbook.id}}">
+                <div class="col image"><img src="/assets/images/chapters/{{logbook.event.image}}"></div>
+                <div class="col big name" style="line-height:65px">{{logbook.custom_name|default:logbook.event.name}}</div>
+            </div>
+        {% endif %}
+        {% endfor %}
+        </div>
+        <br>
+        <input type="submit" value="Save Order" name="method">
+    </form>
+    {% endif %}
+    
+    
 {% endif %}
 {% if section == "inventory" %}
     <h1>Edit Team Inventory</h1>

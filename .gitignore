@@ -1,6 +1,7 @@
 # Ignore
 *.pyc
 *.pnws
+*.vhost
 private_settings.py
 assets/images/sprites/*
 assets/data/logins/*.json
