@@ -12,7 +12,7 @@ body
     color:#111;
 }
 
-a, a:visited
+a, a:visited, .jsLink
 {
     text-decoration:none;
     color:#5365BE;

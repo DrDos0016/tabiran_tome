@@ -406,6 +406,41 @@ def team_edit(request, team_id, section):
             team = Team.objects.filter(pk=team_id).prefetch_related("teammates")[0]
             pokemon = team.teammates.all()
             
+            
+            # Check if you're deleting a Pokemon
+            if request.POST.get("action") == "delete-pokemon":
+                # Confirm you're an author
+                for author in team.authors.all():
+                    if request.session.get("user_id") == author.id:
+                        yours = True
+                    if not yours:
+                        return redirect("/")
+                    
+                # Confirm you're trying to remove Pokemon on said team
+                list = request.POST.getlist("delete")
+                deleted_names = ""
+                for id in list: # This is not efficient in the slightest
+                    match = False
+                    for pk in pokemon:
+                        if pk.id == int(id):
+                            match = True
+                            deleted_names += pk.name + ", "
+                            break
+                    if not match:
+                        return redirect("/")
+                
+                Pokemon.objects.filter(id__in=list).delete()
+                feed_post("TEAM", "Deleted Pokemon: " + deleted_names[:-2], request.session.get("user_id"), team.id)
+                return redirect("/team/view/"+str(team.id)+"/"+slugify(team.name.lower()))
+            
+            # Check if you're deleting a Team
+            if request.POST.get("action") == "delete-team":
+                print "L#438"
+                Pokemon.objects.filter(team_id=team_id).delete()
+                print "L#440"
+                team.delete()
+                return redirect("/")
+            
             if len(pokemon) != len(request.POST.getlist("id")):
                 return redirect("/error", errors=["Array length mismatch!"])
             

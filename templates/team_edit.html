@@ -138,6 +138,10 @@ $(document).ready(function (){
             $(this).parent().find("input[name=shiny]").val("0");
         }
     });
+    
+    $("#delete-btn").click(function (){
+        $("#delete-hidden").show();
+    });
 });
 </script>
 {% endif %}
@@ -406,10 +410,48 @@ $(document).ready(function (){
     allowing for tracking of former teammates who may have appeared in past submissions to still show up in searches for that Pokémon.</p>
     
     <p class="l">You may set this status to anything you like such as "Retired", "Deceased", "Missing in Action", or anything else. Do note however, that if a team member 
-    isn't set to <b>"Active"</b>, they will appear grayed out on your team's page.</p>
+    isn't set to <b>"Active"</b>, they will appear grayed out on your team's page. If a Pokémon will no longer be on your team, adjust their status accordingly. Don't delete them!</p>
+
+    <p>You can also delete pokémon or an entire team. These options are hidden by default to prevent accidental removal. <span class="jsLink" id="delete-btn">I need to delete a pokémon/team</span></p>
     
-    <p class="l">If a Pokémon will no longer be on your team, adjust their status accordingly. If you've mistakenly added a Pokémon who shouldn't have been on your team
-    in the first place that should be deleted entirely, contact an admin.</p>
+    <div id="delete-hidden" style="display:none">
+    <h1>Delete Pokémon</h1>
+    <p class="l">Please note that deleting a Pokémon removes it from the site entirely! THIS CANNOT BE UNDONE.</p>
+    <form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="delete-pokemon">
+    {% for poke in team.teammates.all %}
+    <div class="teammate-edit c" id="pokemon-delete">
+        <div class="col">{{poke.bubble|safe}}</div>
+        <div class="col">
+            Name<br>
+            {{poke.name}}
+        </div>
+        <div class="col">
+            Species<br>
+            {{poke.species_name}}
+        </div>
+        <div class="col">
+            DELETE<br>
+            <input type="checkbox" name="delete" value="{{poke.id}}">
+        </div>
+    </div>
+    {% endfor %}
+    <div class="finalize c col">
+        <div class="col" style="width:25%"><input type="submit" value="Delete Pokémon"></div>
+    </div>
+    </form>
+    
+    <h1>Delete Team</h1>
+    <p class="l">Please note that deleting a Team removes it from the site entirely! THIS CANNOT BE UNDONE.</p>
+    <form method="POST">
+    <input type="hidden" name="action" value="delete-team">
+    {% csrf_token %}
+    <div class="finalize c col">
+        <div class="col" style="width:50%"><input type="submit" value="Delete ENTIRE Team"></div>
+    </div>
+    </form>
+    </div>
     
 {% endif %}
 {% if section == "reputation" %}
