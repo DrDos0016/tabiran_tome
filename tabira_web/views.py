@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import print_function
 from __future__ import unicode_literals
+
+
 from django.shortcuts import render
-from common import *
+from .common import *
 
 def chapter(request):
     data = {"title":"Chapter Listing"}
     data["chapters"] = Event.objects.all().order_by("-order")
-    return render_to_response('chapter.html', data, context_instance=RequestContext(request))
+    return render(request, 'chapter.html', data)
 
 def error(request, errors={}):
     data = {"title":"Error!"}
@@ -29,11 +33,11 @@ def error(request, errors={}):
         data["meta"] += "DA ID     : " + request.session.get("da_id") + "\n"
         data["meta"] += "BETA      : " + str(request.session.get("beta")) + "\n"
         data["meta"] += "ADMIN     : " + str(request.session.get("admin")) + "\n"
-    return render_to_response('error.html', data, context_instance=RequestContext(request))
+    return render(request, 'error.html', data)
 
 def generic(request, title="", template=""):
     data = {"title":title}
-    return render_to_response(template, data, context_instance=RequestContext(request))
+    return render(request, template, data)
 
 def index(request): # Index/Manage Teams
     data = {"title":"Table of Contents"}
@@ -66,7 +70,7 @@ def index(request): # Index/Manage Teams
     else:
         data["welcome"] = True
     
-    return render_to_response('index.html', data, context_instance=RequestContext(request))
+    return render(request, 'index.html', data)
     
 def sign_in(request):
     data = {"title":"Sign In"}
@@ -81,25 +85,15 @@ def sign_in(request):
     else:
         url = "https://www.deviantart.com/oauth2/token?client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET+"&grant_type=authorization_code&code="+request.GET["code"]+"&redirect_uri="+uri
         
-        
-        #if ENV == "DEV" and False:
         try:
-            # Standard
-            response = urllib2.urlopen(url)
-            data = json.load(response)
+            response = urllib.request.urlopen(url)
+            content = response.read().decode("utf-8")
+            data = json.loads(content)
             token = data["access_token"]
-            response = urllib2.urlopen("https://www.deviantart.com/api/v1/oauth2/user/whoami?access_token="+token)
-            data = json.load(response)
+            response = urllib.request.urlopen("https://www.deviantart.com/api/v1/oauth2/user/whoami?access_token="+token)
+            data = json.loads(response.read().decode("utf-8"))
         except:
-            if ENV == "DEV":
-                print "Forcing external login system. (Yuk!)"
-            # Ext script
-            os.system("/usr/local/bin/python2.7.10 /var/projects/tales_of_tabira/tabira_web/login.py " + request.META.get("REMOTE_ADDR").replace(".", "") + " \"" + url + "\"")
-            # Read file
-            data = open("/var/projects/tales_of_tabira/assets/data/logins/"+request.META.get("REMOTE_ADDR").replace(".", "")+".json").read()
-            data = json.loads(data)
-            if data:
-                os.remove("/var/projects/tales_of_tabira/assets/data/logins/"+request.META.get("REMOTE_ADDR").replace(".", "")+".json")
+            return redirect("/")
         
         request.session["logged_in"] = True
         request.session["username"] = data["username"]
@@ -199,14 +193,14 @@ def browse(request, method, key=None, slug=None):
     data["teams"] = data["teams"].order_by(sort)[(page-1)*tpp:(page-1)*tpp+tpp]
     data["query"] = data["teams"].query
     if ENV == "DEV":
-        print data["query"]
+        print(data["query"])
         
     if method == "chapter":
         for team in data["teams"]:
             team.logbook = team.logbooks.filter(event__key=key)
         
     # Append logbook info
-    return render_to_response("browse.html", data, context_instance=RequestContext(request))
+    return render(request, 'browse.html', data)
     
 def population(request):
     data = {"title":"Stats - Population"}
@@ -224,7 +218,6 @@ def population(request):
             active_dict[a.species] = 1
             
     for s in species:
-        print s
         data["species"].append({"name":NUM_TO_NAME[s["species"]], "count":s["species_count"], "active":active_dict.get(s["species"], 0), "dex":s["species"]})
         
     if request.GET.get("sort") == "species":
@@ -233,7 +226,7 @@ def population(request):
         data["species"] = sorted(data["species"], key=lambda k: (-1 * k["active"], k["name"].lower()))
     else:
         data["species"] = sorted(data["species"], key=lambda k: (-1 * k["count"], k["name"].lower()))
-    return render_to_response("population.html", data, context_instance=RequestContext(request))
+    return render(request, 'population.html', data)
 
 def reputation(request, filter=None):
     data = {
@@ -352,7 +345,7 @@ def reputation(request, filter=None):
         elif filter == "k-3":
             data["teams"] = Team.objects.filter(rep_keepers__gte=24).order_by("-rep_keepers", "name")
     
-    return render_to_response("reputation.html", data, context_instance=RequestContext(request))
+    return render(request, 'reputation.html', data)
 
 def team_edit(request, team_id, section):
     data = {"title":"Edit Team - " + section.title()}
@@ -435,9 +428,7 @@ def team_edit(request, team_id, section):
             
             # Check if you're deleting a Team
             if request.POST.get("action") == "delete-team":
-                print "L#438"
                 Pokemon.objects.filter(team_id=team_id).delete()
-                print "L#440"
                 team.delete()
                 return redirect("/")
             
@@ -626,7 +617,7 @@ def team_edit(request, team_id, section):
             
     
     data["team"] = team
-    return render_to_response("team_edit.html", data, context_instance=RequestContext(request))
+    return render(request, 'team_edit.html', data)
     
 def team_view(request, team_id=None):
     data = {}
@@ -656,7 +647,7 @@ def team_view(request, team_id=None):
         data["next"] = page + 1
         data["feed"] = Feed.objects.filter(team_id=team_id).order_by("-id")[(page-1)*fpp:(page-1)*fpp+fpp]
         data["has_feed"] = True
-    return render_to_response("team_view.html", data, context_instance=RequestContext(request))
+    return render(request, 'team_view.html', data)
     
 def test(request):
     from django import VERSION

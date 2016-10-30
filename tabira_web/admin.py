@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
+
 from django.shortcuts import render
-from common import *
-from views import error
+from .common import *
+from .views import error
 
 def admin(request):
     data = {"title":"Administration"}
     if not request.session.get("admin"):
         return redirect("/")
-    return render_to_response('admin/admin.html', data, context_instance=RequestContext(request))
+    return render(request, 'admin/admin.html', data)
 
 def delete_pokemon(request):
     data = {"title":"Delete Pokémon"}
@@ -23,7 +28,7 @@ def delete_pokemon(request):
         Pokemon.objects.filter(id__in=list).delete()
         return redirect("/team/view/"+str(data["team"].id)+"/"+slugify(data["team"].name))
         
-    return render_to_response('admin/delete_pokemon.html', data, context_instance=RequestContext(request))
+    return render(request, 'admin/delete_pokemon.html', data)
     
 def delete_team(request):
     data = {"title":"Delete Team"}
@@ -38,7 +43,7 @@ def delete_team(request):
         Team.objects.filter(pk=request.POST.get("delete")).delete()
         return redirect("/admin")
         
-    return render_to_response('admin/delete_team.html', data, context_instance=RequestContext(request))
+    return render(request, 'admin/delete_team.html', data)
     
 def manage_items(request):
     data = {"title":"Manage Items"}
@@ -75,7 +80,7 @@ def manage_items(request):
     if request.GET.get("item"):
         data["wip"] = Item.objects.get(pk=request.GET["item"])
     
-    return render_to_response('admin/manage_items.html', data, context_instance=RequestContext(request))
+    return render(request, 'admin/manage_items.html', data)
     
 def manage_events(request):
     data = {"title":"Manage Events"}
@@ -138,7 +143,7 @@ def remove_author(request):
         #Owner.objects.filter(id__in=list).delete()
         return redirect("/team/view/"+str(data["team"].id)+"/"+slugify(data["team"].name))
         
-    return render_to_response('admin/remove_author.html', data, context_instance=RequestContext(request))
+    return render(request, 'admin/remove_author.html', data)
     
 def verify_teams(request):
     data = {"title":"Verify Teams"}
@@ -152,4 +157,4 @@ def verify_teams(request):
         data["checked"] = int(request.GET.get("team", 0))
     
     data["teams"] = Team.objects.filter(verified=0).order_by("name")
-    return render_to_response('admin/verify_teams.html', data, context_instance=RequestContext(request))
+    return render(request, 'admin/verify_teams.html', data)

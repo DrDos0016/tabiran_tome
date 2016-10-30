@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import print_function
 from __future__ import unicode_literals
+
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
@@ -12,7 +15,7 @@ from django.db.models import Count, Avg, Sum
 from django.db.models import Q, F
 from django.db import connection
 
-import urllib, urllib2, ssl, json, glob, os, math, sys
+import urllib, ssl, json, glob, os, math, sys
 from tabira_web.models import *
 from tabira.private_settings import ENV, CLIENT_ID, CLIENT_SECRET
 from datetime import *
