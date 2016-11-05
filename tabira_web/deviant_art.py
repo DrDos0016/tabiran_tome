@@ -4,7 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 
-import urllib
+import urllib.request
 import json
 from sys import exit
 from datetime import datetime, timedelta
@@ -30,10 +30,11 @@ class DeviantArt(object):
         
     def get_token(self):
         url = "https://www.deviantart.com/oauth2/token?grant_type=client_credentials&client_id="+self.client_id+"&client_secret="+self.client_secret
-        response = urllib.urlopen(url)
-        data = json.load(response)
+        response = urllib.request.urlopen(url)
+        content = response.read().decode("utf-8")
+        data = json.loads(content)
         if not data.get("status") == "success":
-            print "Unable to get auth token! Exiting."
+            print("Unable to get auth token! Exiting.")
             exit()
             
         self.token = data["access_token"]
@@ -45,17 +46,17 @@ class DeviantArt(object):
         
     def send_request(self, operation, **kwargs):
         if not self.token:
-            print "No token has been defined."
+            print("No token has been defined.")
             return False
         url = "https://www.deviantart.com/api/v1/oauth2/"+operation
         url += "?access_token="+self.token
-        for k,v in kwargs.iteritems():
+        for k,v in kwargs.items():
             if v != "":
                 url += "&"+str(k)+"="+str(v)
-        #print "\nREQUEST:", url
         
-        response = urllib.urlopen(url)
-        data = json.load(response)
+        response = urllib.request.urlopen(url)
+        content = response.read().decode("utf-8")
+        data = json.loads(content)
         return data
         
     def set_token(self, token, token_type="client_credentials", expires_on=0):

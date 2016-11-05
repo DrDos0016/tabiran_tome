@@ -1,5 +1,8 @@
-#!/usr/bin/python
-# coding=utf-8
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import os, sys, django
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 sys.path.append("/var/projects/tales_of_tabira")
@@ -28,7 +31,7 @@ def main():
         results = galleries.get("results")
         if results:
             for result in results:
-                print result
+                print(result)
                 g, created = Gallery.objects.get_or_create(folder_id=result["folderid"])
                 if created:
                     g.parent    = result.get("parent", "")
@@ -45,7 +48,7 @@ def main():
     # Discover new deviations in each monitored gallery
     galleries_qs = Gallery.objects.filter(monitor=True)
     for gallery in galleries_qs:
-        print "Processing gallery:", gallery.name
+        print("Processing gallery:", gallery.name)
         folder_id = gallery.folder_id
         offset = 0
         running = True
@@ -56,7 +59,7 @@ def main():
                 for deviation in deviations:
                     d, created = Deviation.objects.get_or_create(deviation_id=deviation["deviationid"], gallery=gallery)
                     if created:
-                        #print "    [ ] " + deviation["title"]
+                        #print("    [ ] " + deviation["title"])
                         d.da_url = deviation["url"]
                         d.title = deviation["title"]
                         d.author_name = deviation["author"]["username"]
@@ -66,9 +69,9 @@ def main():
                             d.full_clean()
                             d.save()
                         except ValidationError as e:
-                            print e.message_dict
+                            print(e.message_dict)
                     else:
-                        #print "    [X] " + deviation["title"]
+                        #print("    [X] " + deviation["title"])
                         if "force" not in sys.argv:
                             running = False
             

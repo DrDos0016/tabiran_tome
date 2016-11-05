@@ -1,5 +1,8 @@
-#!/usr/bin/python
-# coding=utf-8
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import os, sys, django
 sys.path.append("/var/projects/tales_of_tabira")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tabira.settings")
