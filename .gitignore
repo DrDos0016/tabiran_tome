@@ -7,3 +7,4 @@ assets/images/sprites/*
 assets/data/logins/*.json
 virt/*
 virt273/*
+venv/*

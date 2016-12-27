@@ -103,7 +103,7 @@ def manage_events(request):
         # DL the image
         url = request.POST["image"]
         if url[:4] == "http":
-            ret = urllib.urlretrieve(url, os.path.join(ROOT, "assets", "images", "chapters", request.POST["key"].lower()+".png"))
+            ret = urllib.request.urlretrieve(url, os.path.join(ROOT, "assets", "images", "chapters", request.POST["key"].lower()+".png"))
             event.image = request.POST["key"].lower()+".png"
         else:
             event.image = request.POST["image"]
