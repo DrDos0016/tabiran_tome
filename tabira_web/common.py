@@ -16,6 +16,7 @@ from django.db.models import Q, F
 from django.db import connection
 
 import urllib, ssl, json, glob, os, math, sys
+import urllib.request
 from tabira_web.models import *
 from tabira.private_settings import ENV, CLIENT_ID, CLIENT_SECRET
 from datetime import *
