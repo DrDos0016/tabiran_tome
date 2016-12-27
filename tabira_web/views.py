@@ -445,13 +445,13 @@ def team_edit(request, team_id, section):
             
             # Limit of 4 active Pokémon
             active_count = 0
-            for x in xrange(0, len(pokemon)):
+            for x in range(0, len(pokemon)):
                 if statuses[x].title() == "Active":
                     active_count += 1
             if active_count > 4:
                 return error(request, errors={"error":"You may have no more than four active teammates at a time."})
             
-            for x in xrange(0, len(pokemon)):
+            for x in range(0, len(pokemon)):
                 changes = ""
                 poke = pokemon[x]
                 if poke.id != int(ids[x]):

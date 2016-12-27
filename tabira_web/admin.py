@@ -63,7 +63,7 @@ def manage_items(request):
         # DL the image
         url = request.POST["image"]
         if url[:4] == "http":
-            ret = urllib.urlretrieve(url, os.path.join(ROOT, "assets", "images", "items", slugify(request.POST["name"].lower())+".png"))
+            ret = urllib.request.urlretrieve(url, os.path.join(ROOT, "assets", "images", "items", slugify(request.POST["name"].lower())+".png"))
             item.image = slugify(request.POST["name"].lower())+".png"
         else:
             item.image = request.POST["image"]
@@ -121,7 +121,7 @@ def manage_events(request):
     if request.GET.get("event"):
         data["wip"] = Event.objects.get(pk=request.GET["event"])
     
-    return render_to_response('admin/manage_events.html', data, context_instance=RequestContext(request))
+    return render(request, 'admin/manage_events.html', data)
     
 def powerless(request):
     request.session["admin"] = 0

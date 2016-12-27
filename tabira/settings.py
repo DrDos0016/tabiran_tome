@@ -54,7 +54,7 @@ ROOT_URLCONF = 'tabira.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["/var/projects/tales_of_tabira/templates/"],
+        'DIRS': ["/var/projects/tabiran_tome/templates/"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -89,5 +89,5 @@ USE_TZ = False
 
 STATIC_URL = '/assets/'
 STATICFILES_DIRS = (
-    '/var/projects/tales_of_tabira/assets/',
+    '/var/projects/tabiran_tome/assets/',
 )
