@@ -4,7 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import os, sys, django
-sys.path.append("/var/projects/tales_of_tabira")
+sys.path.append("/var/projects/tabiran_tome")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tabira.settings")
 django.setup()
 from tabira_web.models import *
