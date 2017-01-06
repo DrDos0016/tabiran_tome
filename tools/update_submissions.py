@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 
 import os, sys, django
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
-sys.path.append("/var/projects/tales_of_tabira")
+sys.path.append("/var/projects/tabiran_tome")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tabira.settings")
 django.setup()
 from tabira_web.models import *
