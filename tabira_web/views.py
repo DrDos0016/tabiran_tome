@@ -486,12 +486,12 @@ def team_edit(request, team_id, section):
 
             # Add new Pokemon if necessary
             if names[-1] != "":
-                poke = Pokemon(name=names[-1], species=species[-1], gender=genders[-1], status=statuses[-1].title(), shiny=shinies[-1])
+                poke = Pokemon(name=names[-1], species=species[-1], gender=genders[-1], status=statuses[-1].title(), shiny=shinies[-1], form=forms[-1])
                 poke.species_line = PKMN_TO_CHAIN.get(int(species[-1]), -1)
                 try:
                     poke.full_clean()
                     poke.save()
-                    changes += "Added new teammate " + poke.name + " the " + poke.gender + " " + (int(poke.shiny)*"shiny ") + poke.species_name()
+                    changes += "Added new teammate " + poke.name + " the " + poke.gender + " " + (int(poke.shiny)*"shiny ") + poke.species_name() + "[Form: " + poke.form + "]. "
                     feed_post("POKEMON", changes, request.session.get("user_id"), team.id)
                     team.teammates.add(poke)
                 except ValidationError as e:

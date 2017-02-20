@@ -420,6 +420,12 @@ $(document).ready(function (){
         <div class="col">
             Species<br>
             {% pokemon_select -1 %}
+            <div class="form">
+                Form<br>
+                <select name="form" data-current="{{poke.form}}">
+                    <option value=""></option>
+                </select>
+            </div>
         </div>
         <div class="col">
             Gender<br>
