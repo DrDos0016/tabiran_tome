@@ -28,8 +28,15 @@
         {% for poke in pokemon %}
         <div class="teammate{% if poke.status|lower != 'active' %} grayscale{% endif %}">
             {{poke.bubble|safe}}
-            <div class="col"><span class="teammate-name">{{poke.name}}</span><br>{{poke.species_name}}</div>
-            <div class="col" style="float:right;text-align:right;margin-right:0.5em;">{{poke.gender}}<br>{{poke.status}}</div>
+            <div class="col">
+                <span class="teammate-name">{{poke.name}}</span><br>
+                {{poke.species_name}}
+                {% if poke.form %}<br>[{{poke.form}}]{% endif %}
+            </div>
+            <div class="col" style="float:right;text-align:right;margin-right:0.5em;">
+                {{poke.gender}}<br>
+                {{poke.status}}
+            </div>
         </div>
         {% endfor %}
         </div>
@@ -37,7 +44,7 @@
 
     <div id="rep" class="col">
         <div class="gear"><a href="/team/edit/{{team.id}}/{{team.name|lower|slugify}}/reputation"><img class="settings-button" src="/assets/images/sprites/icons/600.png" title="Edit"></a></div>
-        <h2>Reputation &amp; Badges</h2><br> 
+        <h2>Reputation &amp; Badges</h2><br>
         <div class="col name">Keepers</div>
         <div class="col rep">{{team.rep_keepers}}</div>
         <div class="col ranks">{% rank_images "Keepers" team.rep_keepers %}</div>
@@ -97,7 +104,7 @@
         {% endif %}
         </div>
     </div>
-    
+
     <div id="inventory" class="col">
         <div class="gear"><a href="/team/edit/{{team.id}}/{{team.name|lower|slugify}}/inventory"><img class="settings-button" src="/assets/images/sprites/icons/600.png" title="Edit"></a></div>
         <h2>{% if inv %}<a href="{{inv.deviation.url}}" target="_blank">{% endif %}Inventory{% if inv %}</a>{% endif %}</h2><br><br>
@@ -112,7 +119,7 @@
         {% endfor %}
         </div>
     </div>
-    
+
     <div id="meta">
         <div class="gear"><a href="/team/edit/{{team.id}}/{{team.name|lower|slugify}}/meta"><img class="settings-button" src="/assets/images/sprites/icons/600.png" title="Edit"></a></div>
         <h2>Team Meta Data</h2><br>
@@ -125,7 +132,7 @@
         {% endfor %}
         </div><br>
     </div>
-    
+
     {% if has_feed %}
     <div id="feed" class="col">
     <h2>Feed</h2><br>
@@ -135,7 +142,7 @@
             <div class="icon col">{{post.user.image_link|safe}}</div>
             <div class="status col">
                 <div class="timestamp">{{post.timestamp}}</div>
-                {{post.status}}       
+                {{post.status}}
             </div>
         </div>
         {% endfor %}

@@ -446,6 +446,7 @@ def team_edit(request, team_id, section):
             genders = request.POST.getlist("gender")
             statuses = request.POST.getlist("status")
             shinies = request.POST.getlist("shiny")
+            forms = request.POST.getlist("form")
 
             # Limit of 4 active Pokémon
             active_count = 0
@@ -465,14 +466,15 @@ def team_edit(request, team_id, section):
                     poke.status = statuses[x].title()
                     changes += "Updated status for " + names[x] + " to be " + statuses[x].title() +". "
 
-                if (poke.name != names[x]) or (poke.species != int(species[x])) or (poke.gender != genders[x]) or (int(poke.shiny) != int(shinies[x])):
-                    changes += "Updated " + poke.name + " the " + poke.gender + " " + (int(poke.shiny)*"shiny ") + poke.species_name() + " to "
+                if (poke.name != names[x]) or (poke.species != int(species[x])) or (poke.gender != genders[x]) or (int(poke.shiny) != int(shinies[x]) or (poke.form != forms[x])):
+                    changes += "Updated " + poke.name + " the " + poke.gender + " " + (int(poke.shiny)*"shiny ") + poke.species_name() + " [Form: " + poke.form + "]" + " to "
                     poke.name = names[x]
                     poke.species = int(species[x])
                     poke.update_species_line()
                     poke.gender = genders[x]
                     poke.shiny = shinies[x]
-                    changes += poke.name + " the " + (int(poke.shiny)*"shiny ") + poke.gender + " " + poke.species_name() + ". "
+                    poke.form = forms[x]
+                    changes += poke.name + " the " + (int(poke.shiny)*"shiny ") + poke.gender + " " + poke.species_name() + "[Form: " + poke.form + "]. "
 
                 try:
                     poke.full_clean()

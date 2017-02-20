@@ -18,6 +18,11 @@
     min-height:60px;
 }
 
+.form
+{
+    display:none;
+}
+
 input
 {
     padding:2px;
@@ -41,7 +46,7 @@ input[type=submit]
 {
     width:100%;
     text-align:center;
-    font-size:14pt;   
+    font-size:14pt;
 }
 
 #rep input[type=submit]
@@ -57,7 +62,7 @@ input[name=earned], input[name=spent], input[name=favor]
 {
     width:3em;
     text-align:center;
-    font-size:14pt;   
+    font-size:14pt;
 }
 
 #team-flex #favor .value
@@ -98,7 +103,7 @@ input[name=earned], input[name=spent], input[name=favor]
 {
     width:3em;
     text-align:center;
-    font-size:14pt;   
+    font-size:14pt;
 }
 
 input, select
@@ -116,8 +121,10 @@ $(document).ready(function (){
     $("select[name=species]").change(function (){
         var val = $(this).val();
         $(this).parent().parent().find(".pokemon-bubble").find("img").attr("src", "/assets/images/sprites/icons/"+val+".png");
+
+        update_form_list();
     });
-    
+
     $("input[name=status]").keyup(function (){
         var val = $(this).val();
         if (val.toLowerCase() == "active")
@@ -125,7 +132,7 @@ $(document).ready(function (){
         else
             $(this).parent().parent().find(".pokemon-bubble").addClass("grayscale");
     });
-    
+
     $("input[name=shiny-check]").change(function (){
         if ($(this).prop("checked"))
         {
@@ -138,11 +145,38 @@ $(document).ready(function (){
             $(this).parent().find("input[name=shiny]").val("0");
         }
     });
-    
+
     $("#delete-btn").click(function (){
         $("#delete-hidden").show();
     });
+
+    update_form_list();
 });
+
+function update_form_list()
+{
+    console.log("Updating forms...");
+    $(".form").hide();
+    $("select[name=species]").each(function (){
+        var current = $(this).val();
+
+        if (FORMS[current])
+        {
+            var options = "";
+            for (var form_idx in FORMS[current])
+            {
+                if (FORMS[current][form_idx] == $(this).parent().find("select[name=form]").data("current"))
+                    options += "<option value='" + FORMS[current][form_idx] + "' selected>" + FORMS[current][form_idx] + "</option>";
+                else
+                    options += "<option value='" + FORMS[current][form_idx] + "'>" + FORMS[current][form_idx] + "</option>";
+            }
+            $(this).parent().find("select[name=form]").html(options);
+            $(this).parent().find(".form").show();
+        }
+        else
+            $(this).parent().find("select[name=form]").html("<option value=''>Standard</option>");
+    });
+}
 </script>
 {% endif %}
 {% if section == "reputation" %}
@@ -151,7 +185,7 @@ $(document).ready(function (){
     $("#rep input").change(function (){
         render_badges();
     });
-    
+
     render_badges();
 });
 
@@ -160,22 +194,22 @@ function render_badges()
     var values = [];
     var letters = ["k", "t", "s", "a"]
     var ranks = {
-        "k":["Initiate", "Preserver", "Warden", "Guardian"], 
-        "t":["Initiate", "Scout", "Explorer", "Adventurer"], 
-        "s":["Initiate", "Protégé", "Lector", "Professor"], 
+        "k":["Initiate", "Preserver", "Warden", "Guardian"],
+        "t":["Initiate", "Scout", "Explorer", "Adventurer"],
+        "s":["Initiate", "Protégé", "Lector", "Professor"],
         "a":["Initiate", "Apprentince", "Adept", "Virtuoso"]
     };
-    
+
     $("#rep input[name^=rep]").each(function (){
         var val = $(this).val();
         values.push(val);
     });
-    
+
     $(".ranks img").each(function (){
         $(this).addClass("darkened");
         $("div[name^=title]").text("Unaffiliated");
     });
-    
+
     for (var x = 0; x < 4; x++)
     {
 
@@ -211,7 +245,7 @@ $(document).ready(function (){
     $("input").change(function (){
         render_favor();
     });
-    
+
     render_favor();
 });
 
@@ -233,7 +267,7 @@ function preview(da_url)
     $.getJSON(url, function (data){
         console.log(data)
         $("#preview").html("");
-        
+
         if (data["thumbnail_url"])
             $("#preview").append("<img src='"+data["thumbnail_url"]+"'>");
         else if (data["html"])
@@ -246,17 +280,17 @@ $(document).ready(function (){
         var task_id = $(this).find("option:selected").data("task-id");
         var deviation_id = $(this).find("option:selected").data("deviation-id");
         var custom_name = $(this).find("option:selected").data("custom-name");
-        
+
         $("select[name=event_id]").val(task_id).change();
         $("select[name=deviation_id]").val(deviation_id);
         $("input[name=custom_name]").val(custom_name);
         preview($("select[name=deviation_id]").find("option:selected").data("da_url"));
     });
-    
+
     $("select[name=deviation_id]").change(function (){
         preview($(this).find("option:selected").data("da_url"));
     });
-    
+
     $("select[name=event_id]").change(function (){
         if ($(this).find("option:selected").val() == -100)
         {
@@ -268,7 +302,7 @@ $(document).ready(function (){
             $("input[name=custom_name]").val("");
         }
     });
-    
+
     //preview($("select[name=deviation_id]").find("option:selected").data("da_url"));
     $(".sortable").sortable({
         cursor: "grabbing",
@@ -294,7 +328,7 @@ $(document).ready(function (){
     $("select[name=item]").change(function (){
         preview($(this).find("option:selected").data("img"));
     });
-    
+
     preview($("select[name=item]").find("option:selected").data("img"));
 });
 </script>
@@ -313,7 +347,7 @@ $(document).ready(function (){
         $(this).addClass("selected");
         $(this).removeClass("grayscale");
     });
-    
+
     $(".type-button.selected").click();
 });
 </script>
@@ -329,10 +363,10 @@ $(document).ready(function (){
         {% csrf_token %}
         <label for="name">Team Name:</label><br>
         <input name="name" maxlength="100" value="{{team.name}}"><br><br>
-        
+
         <label for="joined">Date Joined:</label><br>
         <input name="joined" value="{{team.joined|date:'Y-m-d'}}" maxlength="10"><br><br>
-        
+
         <input type="submit" value="Save Changes">
     </form>
 {% endif %}
@@ -351,6 +385,12 @@ $(document).ready(function (){
         <div class="col">
             Species<br>
             {% pokemon_select poke.species %}
+            <div class="form">
+                Form<br>
+                <select name="form" data-current="{{poke.form}}">
+                    <option value=""></option>
+                </select>
+            </div>
         </div>
         <div class="col">
             Gender<br>
@@ -395,25 +435,25 @@ $(document).ready(function (){
             <input name="shiny" value="0" type="hidden">
         </div>
     </div>
-    
+
     <h1>Finalize</h1>
     <div class="finalize l col">
         <div class="col" style="width:40%">Why are these values changing?</div>
         <div class="col" style="width:27%"><input name="why" type="text" value="" maxlength="80" class="l"></div>
         <div class="col" style="width:25%"><input type="submit" value="Save Changes"></div>
     </div>
-    
+
     </form>
-    
+
     <h1>Help</h1>
-    <p class="l">Your Pokémon's status is meant to help others working with your team figure out if a Pokémon who would be around for a current task, as well as 
+    <p class="l">Your Pokémon's status is meant to help others working with your team figure out if a Pokémon who would be around for a current task, as well as
     allowing for tracking of former teammates who may have appeared in past submissions to still show up in searches for that Pokémon.</p>
-    
-    <p class="l">You may set this status to anything you like such as "Retired", "Deceased", "Missing in Action", or anything else. Do note however, that if a team member 
+
+    <p class="l">You may set this status to anything you like such as "Retired", "Deceased", "Missing in Action", or anything else. Do note however, that if a team member
     isn't set to <b>"Active"</b>, they will appear grayed out on your team's page. If a Pokémon will no longer be on your team, adjust their status accordingly. Don't delete them!</p>
 
     <p>You can also delete pokémon or an entire team. These options are hidden by default to prevent accidental removal. <span class="jsLink" id="delete-btn">I need to delete a pokémon/team</span></p>
-    
+
     <div id="delete-hidden" style="display:none">
     <h1>Delete Pokémon</h1>
     <p class="l">Please note that deleting a Pokémon removes it from the site entirely! THIS CANNOT BE UNDONE.</p>
@@ -441,7 +481,7 @@ $(document).ready(function (){
         <div class="col" style="width:25%"><input type="submit" value="Delete Pokémon"></div>
     </div>
     </form>
-    
+
     <h1>Delete Team</h1>
     <p class="l">Please note that deleting a Team removes it from the site entirely! THIS CANNOT BE UNDONE.</p>
     <form method="POST">
@@ -452,7 +492,7 @@ $(document).ready(function (){
     </div>
     </form>
     </div>
-    
+
 {% endif %}
 {% if section == "reputation" %}
     <h1>Edit Reputation</h1>
@@ -479,7 +519,7 @@ $(document).ready(function (){
         <div class="col ranks">{% rank_images "Artisans" team.rep_artisans %}</div>
         <div class="col title" name="title-a">{% rank "Artisans" team.rep_artisans %}</div>
         <br><br>
-        
+
         <h1>Finalize</h1>
         <div class="finalize l col">
             <div class="col" style="width:40%">Why are these values changing?</div>
@@ -500,7 +540,7 @@ $(document).ready(function (){
         <br>
         <div class="col label">Remaining</div> <div class="col value"><input name="favor" value="{{team.favor}}" maxlength="3" readonly></div>
         <br><br>
-        
+
         <h1>Finalize</h1>
         <div class="finalize l col">
             <div class="col" style="width:40%">Why are these values changing?</div>
@@ -523,9 +563,9 @@ $(document).ready(function (){
                 </option>
             {% endfor %}
         </select>
-        
+
         <br><br>
-        
+
         <label for="event">Chapter Task:</label><br>
         <select name="event_id">
             <option value="N/A" selected>- Select A Task -</option>
@@ -544,14 +584,14 @@ $(document).ready(function (){
         </select>
         <br>
         <br>
-        
+
         <div class="custom">
         <label for="custom_name">Custom Name:</label><br>
         <input name="custom_name" maxlength="80">
         <br><br>
         </div>
         <!--<input name="order" maxlength="4">-->
-        
+
         <label for="deviation_id">Deviation:</label><br>
         <select name="deviation_id">
             <option value="N/A" selected>- Select A Deviation -</option>
@@ -565,16 +605,16 @@ $(document).ready(function (){
         <br><br>
         <input type="submit" value="DELETE Chapter" name="method">
         <input type="submit" value="Save Chapter" name="method">
-        
+
         {% if newbie %}
         <br>
         <p>Your team's first submitted chapter must be its team application. After the application has been set you'll be able to submit any chapter you wish.</p>
         {% endif %}
-        
+
         <div id="preview">
         </div>
     </form>
-    
+
     {% if submissions %}
     <h1>Rearrange Chapters</h1>
     <p>Drag and drop to rearrange the order your chapters will appear</p>
@@ -595,8 +635,8 @@ $(document).ready(function (){
         <input type="submit" value="Save Order" name="method">
     </form>
     {% endif %}
-    
-    
+
+
 {% endif %}
 {% if section == "inventory" %}
     <h1>Edit Team Inventory</h1>
@@ -615,14 +655,14 @@ $(document).ready(function (){
         <label><input type="radio" name="action" value="Add" checked> Add to team's inventory<label><br>
         <label><input type="radio" name="action" value="Remove"> Remove from team's inventory<label><br>
         <br><br>
-        
+
         <h1>Finalize</h1>
         <div class="finalize l col">
             <div class="col" style="width:40%">Why are these values changing?</div>
             <div class="col" style="width:27%"><input name="why" type="text" value="" maxlength="80" class="l"></div>
             <div class="col" style="width:25%"><input type="submit" value="Save Changes"></div>
         </div>
-        
+
     </form>
 {% endif %}
 {% if section == "meta" %}
@@ -658,12 +698,12 @@ $(document).ready(function (){
         {% endfor %}
         <label for="author">New Author</label><br>
         <input name="author" type="text" class="l" value=""><br>
-        
+
         <input type="submit" value="Save Changes">
-        
+
         <h1 class="l">Help</h1>
         <p class="l">When adding a new author, the account being added must have logged into the Tabiran Tome website at some point.</p>
-        
+
         <p class="l">Please contact an administrator if you need to remove a user's access from a team.</p>
     </form>
 {% endif %}
