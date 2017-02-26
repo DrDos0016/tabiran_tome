@@ -414,9 +414,9 @@ def team_edit(request, team_id, section):
                         return redirect("/")
 
                 # Confirm you're trying to remove Pokemon on said team
-                list = request.POST.getlist("delete")
+                delete_list = request.POST.getlist("delete")
                 deleted_names = ""
-                for id in list: # This is not efficient in the slightest
+                for id in delete_list: # This is not efficient in the slightest
                     match = False
                     for pk in pokemon:
                         if pk.id == int(id):
@@ -426,7 +426,7 @@ def team_edit(request, team_id, section):
                     if not match:
                         return redirect("/")
 
-                Pokemon.objects.filter(id__in=list).delete()
+                Pokemon.objects.filter(id__in=delete_list).delete()
                 feed_post("TEAM", "Deleted Pokemon: " + deleted_names[:-2], request.session.get("user_id"), team.id)
                 return redirect("/team/view/"+str(team.id)+"/"+slugify(team.name.lower()))
 
