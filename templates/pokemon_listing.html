@@ -1,0 +1,57 @@
+{% extends "main.html" %}
+
+{% block css %}
+<style>
+.mono
+{
+    font-family:monospace;
+    font-size:larger;
+    text-align:right;
+}
+
+.data-table
+{
+    width:auto;
+}
+
+.data-table td
+{
+    border:2px solid #BAA687;
+}
+
+.data-table td.img
+{
+    text-align:center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="controls">
+    Sort by: <a href="?sort=name">Name</a> | <a href="?sort=number">Number</a>
+</div>
+
+<div>
+<b>{{totals.total}}</b> known Pokemon. <b>{{totals.permitted}}</b> permitted.
+<b>{{totals.forbidden}}</b> forbidden.
+</div>
+
+<div class="content">
+    <table class="data-table">
+        <tr>
+            <th>ID</th>
+            <th>Pokemon</th>
+            <th>Permitted</th>
+            <th>Forbidden</th>
+        </tr>
+        {% for poke in pokemon_data %}
+        <tr>
+            <td class="mono">{{poke.id}}</td>
+            <td>{{poke.name}}</td>
+            <td class="img">{% if poke.permitted %}<img src="/assets/images/sprites/icons/{{poke.id}}.png" alt="{{poke.name}}">{% endif %}</td>
+            <td class="img">{% if poke.forbidden %}<img src="/assets/images/sprites/icons/{{poke.id}}.png" alt="{{poke.name}}">{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

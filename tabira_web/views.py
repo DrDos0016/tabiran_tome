@@ -206,6 +206,33 @@ def browse(request, method, key=None, slug=None):
     # Append logbook info
     return render(request, 'browse.html', data)
 
+def pokemon_listing(request):
+    data = {"title":"Pokemon Listing"}
+    data["all"] = POKEMON
+    data["allowed"] = TABIRA_VALID
+    data["pokemon_data"] = []
+    data["sort"] = request.GET.get("sort", "name")
+    data["totals"] = {"total":len(POKEMON), "permitted":0, "forbidden":0}
+    for poke in POKEMON:
+        info = {}
+        info["name"] = poke
+        info["id"] = NAME_TO_NUM[poke]
+        if poke in TABIRA_VALID:
+            info["permitted"] = True
+            info["forbidden"] = False
+            data["totals"]["permitted"] += 1
+        else:
+            info["permitted"] = False
+            info["forbidden"] = True
+            data["totals"]["forbidden"] += 1
+        data["pokemon_data"].append(info)
+
+    if data["sort"] == "number":
+        data["pokemon_data"] = sorted(data["pokemon_data"], key=lambda k: (k["id"]))
+    elif data["sort"] == "name":
+        data["pokemon_data"] = sorted(data["pokemon_data"], key=lambda k: (k["name"].lower()))
+    return render(request, 'pokemon_listing.html', data)
+
 def population(request):
     data = {"title":"Stats - Population"}
 

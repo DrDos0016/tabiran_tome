@@ -27,7 +27,7 @@ import tabira_web.admin
 urlpatterns = [
     #url(r'^admin/', include(admin.site.urls)),
     url(r'^$', tabira_web.views.index),
-    
+
     # Admin functions
     url(r'^admin$', tabira_web.admin.admin),
     url(r'^admin/delete-pokemon$', tabira_web.admin.delete_pokemon),
@@ -39,31 +39,32 @@ urlpatterns = [
     url(r'^admin/verify-teams$', tabira_web.admin.verify_teams),
 
     # AJAX functions
-    
+
     # Chapter functions
     url(r'^chapter$', tabira_web.views.chapter),
     url(r'^chapter/list/(?P<key>[a-z0-9]+)/(?P<slug>.*)$', tabira_web.views.browse, {"method":"chapter"}),
-    
+
     # Misc functions
     url(r'^misc$', tabira_web.views.generic, {"title":"Misc", "template":"misc.html"}),
+    url(r'^misc/pokemon-listing$', tabira_web.views.pokemon_listing),
     url(r'^stats/population$', tabira_web.views.population),
     url(r'^stats/reputation/(?P<filter>.*)$', tabira_web.views.reputation),
     url(r'^stats/reputation$', tabira_web.views.reputation),
-    
+
     # Team functions
     url(r'^team$', tabira_web.views.browse, {"method":"team"}),
     url(r'^team/edit/(?P<team_id>[-0-9]+)/(.*)/(?P<section>[a-z]+)$', tabira_web.views.team_edit),
     url(r'^team/view/(?P<team_id>[-0-9]+)/(.*)$', tabira_web.views.team_view),
-    
+
     # User functions
     url(r'^sign-in$', tabira_web.views.sign_in),
     url(r'^sign-out$', tabira_web.views.sign_out),
-    
+
     # Debugging functions
     url(r'^error$', tabira_web.views.error),
     url(r'^error/(?P<test>.*)$', tabira_web.views.error),
     url(r'^test$', tabira_web.views.test),
-    
+
     # Easter Eggs because I can't resist
     url(r'^egg/simon$', tabira_web.views.generic, {"title":"SIMON", "template":"egg_simon.html"}),
 ]
