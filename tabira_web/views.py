@@ -229,7 +229,7 @@ def pokemon_listing(request):
 
     if data["sort"] == "number":
         data["pokemon_data"] = sorted(data["pokemon_data"], key=lambda k: (k["id"]))
-    elif data["sort"] == "name":
+    else:
         data["pokemon_data"] = sorted(data["pokemon_data"], key=lambda k: (k["name"].lower()))
     return render(request, 'pokemon_listing.html', data)
 
