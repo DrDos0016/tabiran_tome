@@ -101,8 +101,8 @@ class Item(models.Model):
     url         = models.URLField(default="http://www.talesoftabira.com/wiki/Items", blank=True)   # URL containing an explanation of the item
 
 class Inventory(models.Model):
-    team        = models.ForeignKey(Team)                   # The teamID that owns an item.
-    item        = models.ForeignKey(Item)                   # The itemID of what the team now has.
+    team        = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)                   # The teamID that owns an item.
+    item        = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)                   # The itemID of what the team now has.
 
     def url(self):
         return self.custom_url if custom_url else self.item.url
@@ -119,8 +119,8 @@ class User(models.Model):
         return '<a href="http://'+self.username+'.deviantart.com" target="_blank"><img src="'+self.icon+'" alt="'+self.username+'" title="'+self.username+'"></a>'
 
 class Feed(models.Model):
-    team            = models.ForeignKey("Team")
-    user            = models.ForeignKey("User")
+    team            = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True)
+    user            = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
     type            = models.CharField(max_length=20, default="", blank=True)
     status          = models.TextField()
     timestamp       = models.DateTimeField(auto_now=True)
@@ -149,10 +149,10 @@ class Event(models.Model):
 
 # Pull folders every hour, have site use ajax to also call for anything not yet stored
 class Logbook(models.Model):
-    event           = models.ForeignKey("Event")
+    event           = models.ForeignKey("Event", on_delete=models.SET_NULL, null=True)
     custom_name     = models.CharField(max_length=80, default="", blank=True)
     order           = models.IntegerField(default=9999)
-    deviation       = models.ForeignKey("Deviation", null=True, blank=True)
+    deviation       = models.ForeignKey("Deviation", null=True, blank=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):
         output = "Logbook - " + self.event.name + "\n"
@@ -166,7 +166,7 @@ class Gallery(models.Model):
 
 class Deviation(models.Model):
     deviation_id    = models.CharField(max_length=38)
-    gallery         = models.ForeignKey("Gallery")
+    gallery         = models.ForeignKey("Gallery", on_delete=models.SET_NULL, null=True)
     da_url          = models.URLField(default="")
     fav_me_url      = models.URLField(default="", blank=True)
     title           = models.CharField(max_length=80)
