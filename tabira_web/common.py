@@ -1,16 +1,10 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
-
-
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.template.defaultfilters import slugify
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 #from django.contrib.sessions.backends.db import SessionStore
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count, Avg, Sum
 from django.db.models import Q, F
 from django.db import connection
